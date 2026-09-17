@@ -2,35 +2,54 @@ import streamlit as st
 
 
 def add_sidebar_logo():
-    with st.sidebar:
-        st.markdown(
-            """
-            <style>
+    st.markdown(
+        """
+        <style>
 
-            div.aetion-sidebar-logo {
-                font-family: Georgia, "Times New Roman", serif;
-                font-size: 1.8rem;
-                font-weight: 700;
-                letter-spacing: -0.04em;
-                margin-top: -8px;
-                margin-bottom: 25px;
-                padding-left: 5px;
-                line-height: 1.2;
-            }
+        /* =====================================================
+           AETION SIDEBAR LOGO
+           ===================================================== */
 
-            div.aetion-sidebar-logo span.aeti {
-                color: #B8860B !important;
-            }
+        .aetion-sidebar-logo {
+            position: fixed;
+            top: 18px;
+            left: 27px;
+            z-index: 999999;
 
-            div.aetion-sidebar-logo span.on {
-                color: #202F57 !important;
-            }
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.2;
 
-            </style>
+            white-space: nowrap;
+        }
 
-            <div class="aetion-sidebar-logo">
-                <span class="aeti"><i>Aeti</i></span><span class="on">ON</span>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        /* Aeti = dark gold */
+        .aetion-sidebar-logo .aeti {
+            color: #B8860B !important;
+        }
+
+        /* ON = pure black */
+        .aetion-sidebar-logo .on {
+            color: #000000 !important;
+        }
+
+
+        /* =====================================================
+           PUSH SIDEBAR NAV DOWN SO IT DOES NOT OVERLAP LOGO
+           ===================================================== */
+
+        [data-testid="stSidebarNav"] {
+            padding-top: 55px !important;
+        }
+
+        </style>
+
+
+        <div class="aetion-sidebar-logo">
+            <span class="aeti"><i>Aeti</i></span><span class="on">ON</span>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
