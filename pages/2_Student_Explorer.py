@@ -22,7 +22,21 @@ from src.interventions import suggest_interventions
 
 st.set_page_config(page_title="Student Explorer", layout="wide")
 
-st.title("Student Explorer")
+st.markdown("""
+<div style="
+padding:25px;
+background:linear-gradient(135deg,#1E2A4A,#2E73B8);
+border-radius:20px;
+margin-bottom:20px;
+">
+<h1 style="color:white;">🎓 Student Explorer</h1>
+<p style="color:white;">
+Drill into one student from the demo cohort:
+their predicted risk, explanation and intervention suggestions.
+</p>
+</div>
+""", unsafe_allow_html=True)
+
 st.caption(
     "Drill into one student from the demo cohort: their predicted risk, "
     "why the model flagged them, and any suggested intervention."
@@ -94,9 +108,39 @@ fig = px.bar(
     y="feature",
     orientation="h",
     color="direction",
-    color_discrete_map={"increases risk": "#d62728", "decreases risk": "#2ca02c"},
+    color_discrete_map={"increases risk": "#2E73B8","decreases risk": "#5EA4F3"}
     title="Top contributing factors (SHAP)",
     labels={"shap_value": "SHAP value (positive = pushes toward Dropout)"},
+)
+fig.update_layout(
+    paper_bgcolor="white",
+    plot_bgcolor="white",
+
+    font=dict(
+        color="black",
+        size=14
+    ),
+
+    title_font=dict(
+        color="black",
+        size=18
+    ),
+
+    xaxis=dict(
+        tickfont=dict(color="black"),
+        title_font=dict(color="black"),
+        gridcolor="#E6EEF8"
+    ),
+
+    yaxis=dict(
+        tickfont=dict(color="black"),
+        title_font=dict(color="black"),
+        gridcolor="#E6EEF8"
+    ),
+
+    legend=dict(
+        font=dict(color="black")
+    )
 )
 st.plotly_chart(fig, use_container_width=True)
 
