@@ -27,7 +27,7 @@ st.set_page_config(
 st.markdown(
 """<style>
 
-/* ============================================================
+* ============================================================
    MAIN APPLICATION
    ============================================================ */
 
@@ -148,29 +148,6 @@ h4 {
     margin: 0;
 
     opacity: 0.92;
-}
-
-
-/* ============================================================
-   AETION BRAND
-   ============================================================ */
-
-.aetion-brand {
-    font-family: Georgia, "Times New Roman", serif;
-
-    font-size: 1.7rem;
-
-    font-weight: 700;
-
-    letter-spacing: -0.04em;
-
-    color: #17243A;
-
-    margin-bottom: 1.5rem;
-}
-
-.aetion-brand span {
-    color: #2E73B8;
 }
 
 
@@ -337,16 +314,6 @@ a {
 }
 
 </style>""",
-unsafe_allow_html=True
-)
-
-
-# ============================================================
-# AETION BRAND
-# ============================================================
-
-st.markdown(
-"""<div class="aetion-brand"><i>Aeti</i><span>ON</span></div>""",
 unsafe_allow_html=True
 )
 
