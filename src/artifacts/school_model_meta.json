@@ -1,0 +1,87 @@
+{
+  "model_version": "school_dropout_v1",
+  "trained_at": "2026-09-17T16:37:46.116581+00:00",
+  "positive_class": "Dropout",
+  "positive_class_index": 0,
+  "feature_order": [
+    "School_Type",
+    "Location",
+    "Infrastructure",
+    "Teaching_Staff",
+    "Gender",
+    "Caste",
+    "Socioeconomic_Status",
+    "Age",
+    "Standard"
+  ],
+  "categorical_values": {
+    "School_Type": [
+      "Government",
+      "Private"
+    ],
+    "Location": [
+      "Rural",
+      "Semi-Urban",
+      "Urban"
+    ],
+    "Infrastructure": [
+      "Basic",
+      "Excellent",
+      "Good",
+      "Poor"
+    ],
+    "Teaching_Staff": [
+      "Excellent",
+      "Good",
+      "Poor",
+      "Unknown"
+    ],
+    "Gender": [
+      "Female",
+      "Male"
+    ],
+    "Caste": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "Socioeconomic_Status": [
+      "High",
+      "Low",
+      "Moderate"
+    ]
+  },
+  "numeric_ranges": {
+    "Age": [
+      10.0,
+      16.0
+    ],
+    "Standard": [
+      5.0,
+      12.0
+    ]
+  },
+  "risk_thresholds": {
+    "low_max": 0.0,
+    "medium_max": 1.0
+  },
+  "metrics": {
+    "accuracy": 0.9970588235294118,
+    "dropout_precision": 1.0,
+    "dropout_recall": 0.9949958298582152,
+    "dropout_f1": 0.9974916387959866,
+    "confusion_matrix": [
+      [
+        1193,
+        6
+      ],
+      [
+        0,
+        841
+      ]
+    ],
+    "cv_f1_mean": 0.9968719483744038,
+    "cv_f1_std": 0.0008720669479533169
+  }
+}

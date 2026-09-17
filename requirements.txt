@@ -6,3 +6,4 @@ shap>=0.44
 statsmodels>=0.14
 plotly>=5.18
 matplotlib>=3.7
+joblib
