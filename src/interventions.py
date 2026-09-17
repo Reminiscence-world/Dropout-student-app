@@ -156,3 +156,19 @@ def recommend_university(input_dict: dict, risk_tier: str) -> list[dict]:
         })
 
     return recommendations
+def suggest_interventions(full_explanation, risk_tier, student_row=None):
+    """Backward-compatible wrapper for the existing Streamlit frontend."""
+    if student_row is not None:
+        try:
+            input_dict = student_row.to_dict()
+        except AttributeError:
+            input_dict = dict(student_row)
+    else:
+        input_dict = {}
+
+    suggestions = recommend_school(input_dict, risk_tier)
+
+    return [
+        f"{item['title']} — {item['rationale']}"
+        for item in suggestions
+    ]
