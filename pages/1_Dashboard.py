@@ -30,16 +30,6 @@ load_css()
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
-st.sidebar.markdown("""
-# 🎓 Reminiscence
-
-### Student Success Analytics
-
-Predict.
-Understand.
-Prevent Dropout.
-""")
-
 st.markdown("""
 <div style='padding:20px;background:linear-gradient(135deg,#0F3D2E,#8BC34A);
 border-radius:20px;color:white;margin-bottom:20px;'>
