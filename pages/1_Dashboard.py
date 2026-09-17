@@ -31,14 +31,12 @@ load_css()
 st.set_page_config(page_title="Dashboard", layout="wide")
 
 st.markdown("""
-<div style='
-padding:30px;
+<div style="
+padding:25px;
 background:linear-gradient(135deg,#1E2A4A,#2E73B8);
 border-radius:20px;
-color:white;
 margin-bottom:20px;
-'>
-
+">
 <h1 style='color:white;'>📊 Cohort Dashboard</h1>
 <p style='color:white;'>
 
