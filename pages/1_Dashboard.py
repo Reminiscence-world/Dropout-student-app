@@ -39,6 +39,20 @@ color:white;
 margin-bottom:20px;
 '>
 
+/* ---------- AETiON brand ---------- */
+        .aetion-brand {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: #17365d;
+            margin-bottom: 2.2rem;
+        }
+
+        .aetion-brand span {
+            color: #2f6fa3;
+        }
+
 <h1 style='color:white;'>📊 Cohort Dashboard</h1>
 
 <p style='color:white;'>
