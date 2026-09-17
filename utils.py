@@ -13,11 +13,11 @@ def add_sidebar_logo():
         }
 
         .aetion-sidebar-logo .aeti {
-            color: #B8860B;
+            color: #FFFFFF;
         }
 
         .aetion-sidebar-logo .on {
-            color: #202F57;
+            color: #FFFFFF;
         }
         </style>
 
