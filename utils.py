@@ -33,7 +33,7 @@ def add_sidebar_logo():
 
         /* ON = black + normal */
         .aetion-sidebar-logo .on {
-            color: #4B5563 !important;
+            color: #5EA4F3 !important;
             font-style: normal !important;
         }
 
