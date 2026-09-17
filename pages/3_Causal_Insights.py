@@ -18,7 +18,49 @@ from src.data_loader import load_and_clean_data, build_binary_target
 from src.causal import run_causal_adjustment, result_to_text, ASSUMPTION_CAVEAT
 from src.variable_roles import CONFOUNDER
 
+with open("style.css") as f:
+    st.markdown(
+        f"<style>{f.read()}</style>",
+        unsafe_allow_html=True
+    )
+    
 st.set_page_config(page_title="Causal Insights", layout="wide")
+
+st.markdown("""
+<style>
+
+/* Sidebar gradient */
+[data-testid="stSidebar"] {
+    background: linear-gradient(
+        180deg,
+        #1E2A4A 0%,
+        #243A73 100%
+    ) !important;
+}
+
+/* Sidebar text */
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: white !important;
+}
+
+/* Navigation items */
+[data-testid="stSidebarNav"] span {
+    color: white !important;
+}
+
+/* Selected page */
+[data-testid="stSidebarNav"] a[aria-current="page"] {
+    background-color: rgba(255,255,255,0.15) !important;
+    border-radius: 10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <div style="
