@@ -56,7 +56,7 @@ st.markdown("""
 <style>
     /* Main page background */
     .stApp {
-        background-color: #EAF4FB;
+        background-color: #DBE8F4;
         color: #17243A;
     }
 
@@ -81,40 +81,67 @@ st.markdown("""
         border-color: #2E73B8 !important;
     }
 
-    /* Buttons / primary accents */
-    .stButton > button {
-        background-color: #2E73B8;
-        color: #FFFFFF !important;
-        border: 1px solid #2E73B8;
-    }
-
-    .stButton > button:hover {
-        background-color: #245F98;
-        border-color: #245F98;
-    }
-
-    /* Dividers */
-    hr {
-        border-color: #C9DDEC !important;
-    }
-
-    /* Metric values */
-    [data-testid="stMetricValue"] {
-        color: #17243A !important;
-    }
-
-    /* Radio/slider accents */
-    [data-baseweb="radio"] [aria-checked="true"] {
-        background-color: #2E73B8 !important;
-        border-color: #2E73B8 !important;
-    }
-
-    /* Warning boxes: keep them compatible with the light blue theme */
-    [data-testid="stAlert"] {
-        background-color: #F3F8FC;
-        border-color: #5EA4F3;
-    }
-</style>
+            /* Sidebar - white text */
+        [data-testid="stSidebar"],
+        [data-testid="stSidebar"] * {
+            color: #FFFFFF !important;
+        }
+        
+        /* Sidebar input text */
+        [data-testid="stSidebar"] input,
+        [data-testid="stSidebar"] textarea {
+            color: #FFFFFF !important;
+        }
+        
+        /* Sidebar selectbox text */
+        [data-testid="stSidebar"] [data-baseweb="select"] * {
+            color: #FFFFFF !important;
+        }
+        
+        /* Sidebar captions / secondary text */
+        [data-testid="stSidebar"] [data-testid="stCaptionContainer"] {
+            color: #FFFFFF !important;
+        }
+        
+        /* Sidebar buttons */
+        [data-testid="stSidebar"] .stButton > button {
+            color: #FFFFFF !important;
+        }
+            
+            /* Buttons / primary accents */
+            .stButton > button {
+                background-color: #2E73B8;
+                color: #FFFFFF !important;
+                border: 1px solid #2E73B8;
+            }
+        
+            .stButton > button:hover {
+                background-color: #245F98;
+                border-color: #245F98;
+            }
+        
+            /* Dividers */
+            hr {
+                border-color: #C9DDEC !important;
+            }
+        
+            /* Metric values */
+            [data-testid="stMetricValue"] {
+                color: #17243A !important;
+            }
+        
+            /* Radio/slider accents */
+            [data-baseweb="radio"] [aria-checked="true"] {
+                background-color: #2E73B8 !important;
+                border-color: #2E73B8 !important;
+            }
+        
+            /* Warning boxes: keep them compatible with the light blue theme */
+            [data-testid="stAlert"] {
+                background-color: #F3F8FC;
+                border-color: #5EA4F3;
+            }
+        </style>
 """, unsafe_allow_html=True)
 
 
