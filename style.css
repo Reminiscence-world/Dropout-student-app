@@ -1,1 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+html, body, [class*="css"] {
+    font-family: 'Poppins', sans-serif;
+}
+
+.stApp {
+    background-color: #F8F9FA;
+}
+
+[data-testid="stMetric"] {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+    border-left: 5px solid #8BC34A;
+}
+
+h1 {
+    color: #0F3D2E;
+}
+
+h2, h3 {
+    color: #0F3D2E;
+}
