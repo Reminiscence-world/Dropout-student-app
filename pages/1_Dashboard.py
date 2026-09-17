@@ -109,6 +109,26 @@ with col1:
         ]
     )
 
+    fig_tiers.update_layout(
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        font=dict(
+            color="#1E2A4A",
+            size=14
+        ),
+        title_font=dict(
+            color="#1E2A4A",
+            size=20
+        ),
+        xaxis=dict(
+            showgrid=False,
+            linecolor="#D6E4F5"
+        ),
+        yaxis=dict(
+            gridcolor="#E6EEF8",
+            linecolor="#D6E4F5"
+        )
+    )
     st.plotly_chart(fig_tiers, use_container_width=True)
 
 with col2:
@@ -132,6 +152,22 @@ with col2:
     ]
     )
 
+    fig_course.update_layout(
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        font=dict(
+            color="#1E2A4A",
+            size=14
+        ),
+        xaxis=dict(
+            showgrid=False,
+            linecolor="#D6E4F5"
+        ),
+        yaxis=dict(
+            gridcolor="#E6EEF8",
+            linecolor="#D6E4F5"
+        )
+    )    
     st.plotly_chart(fig_course, use_container_width=True)
 
 
