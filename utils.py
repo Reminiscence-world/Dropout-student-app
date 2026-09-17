@@ -25,19 +25,21 @@ def add_sidebar_logo():
             white-space: nowrap;
         }
 
-        /* Aeti = dark gold */
+        /* AETI = dark yellow + italic */
         .aetion-sidebar-logo .aeti {
             color: #B8860B !important;
+            font-style: italic !important;
         }
 
-        /* ON = pure black */
+        /* ON = black + normal */
         .aetion-sidebar-logo .on {
-            color: #DBE8F4 !important;
+            color: #000000 !important;
+            font-style: normal !important;
         }
 
 
         /* =====================================================
-           PUSH SIDEBAR NAV DOWN SO IT DOES NOT OVERLAP LOGO
+           KEEP SIDEBAR NAV BELOW THE LOGO
            ===================================================== */
 
         [data-testid="stSidebarNav"] {
@@ -48,8 +50,9 @@ def add_sidebar_logo():
 
 
         <div class="aetion-sidebar-logo">
-            <span class="aeti"><i>Aeti</i></span><span class="on">ON</span>
+            <span class="aeti">AETI</span><span class="on">ON</span>
         </div>
+
         """,
         unsafe_allow_html=True
     )
