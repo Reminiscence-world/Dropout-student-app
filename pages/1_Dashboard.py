@@ -100,7 +100,19 @@ with col1:
     st.subheader("Risk tier distribution")
     st.caption(TIER_CAVEAT)
     counts_df = tier_counts(tiers)
-    fig_tiers = px.bar(counts_df, x="tier", y="count", title="Students by risk tier")
+    
+    fig_tiers = px.bar(
+        counts_df,
+        x="tier",
+        y="count",
+        color="tier",
+        color_discrete_sequence=[
+            "#8BC34A",
+            "#4CAF50",
+            "#0F3D2E"
+        ]
+    )
+
     st.plotly_chart(fig_tiers, use_container_width=True)
 
 with col2:
@@ -112,17 +124,18 @@ with col2:
         .sort_values("predicted_proba", ascending=False)
     )
     by_course["course"] = by_course["course"].astype(str)
-    fig_tiers = px.bar(
-    counts_df,
-    x="tier",
-    y="count",
-    color="tier",
-    color_discrete_sequence=[
-        "#8BC34A",
-        "#4CAF50",
-        "#0F3D2E"
+    fig_course = px.bar(
+        by_course,
+        x="course",
+        y="predicted_proba",
+        color="predicted_proba",
+        color_continuous_scale=[
+            "#8BC34A",
+            "#4CAF50",
+            "#0F3D2E"
     ]
-)
+    )
+
     st.plotly_chart(fig_course, use_container_width=True)
 
 

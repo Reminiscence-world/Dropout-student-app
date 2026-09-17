@@ -23,3 +23,29 @@ h1 {
 h2, h3 {
     color: #0F3D2E;
 }
+
+/* Force all text to black */
+
+html, body, p, span, div, label {
+    color: black !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+}
+
+[data-testid="stMetricLabel"] {
+    color: black !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: black !important;
+}
+
+.stMarkdown {
+    color: black !important;
+}
+
+.stCaption {
+    color: black !important;
+}
