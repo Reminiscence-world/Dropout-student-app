@@ -7,6 +7,7 @@ language for an advisor (not a data scientist) audience.
 """
 
 import streamlit as st
+from utils import add_sidebar_logo
 
 
 # ============================================================
@@ -18,7 +19,7 @@ st.set_page_config(
     page_icon="ℹ️",
     layout="wide"
 )
-
+add_sidebar_logo()
 
 # ============================================================
 # AETION COLOUR THEME
