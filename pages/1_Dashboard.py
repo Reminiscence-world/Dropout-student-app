@@ -13,6 +13,7 @@ run the trained model over the current active student list instead.
 """
 
 import streamlit as st
+from utils import add_sidebar_logo
 import plotly.express as px
 
 from src.data_loader import load_and_clean_data
@@ -29,6 +30,7 @@ def load_css():
 load_css()
 
 st.set_page_config(page_title="Dashboard", layout="wide")
+add_sidebar_logo()
 
 st.markdown("""
 <div style="
