@@ -204,10 +204,10 @@ def main():
     # The thresholds are the 1/3 and 2/3 tertiles of the
     # held-out test-set Dropout probabilities.
     risk_thresholds = {
-        "low_max": float(
+        "low_medium": float(
             pd.Series(y_prob).quantile(1 / 3)
         ),
-        "medium_max": float(
+        "medium_high": float(
             pd.Series(y_prob).quantile(2 / 3)
         ),
     }

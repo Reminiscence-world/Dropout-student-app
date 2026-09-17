@@ -62,8 +62,12 @@ def _load_school_artifact():
             _school_meta = json.load(handle)
 
         logger.info("School model loaded successfully.")
+
     except Exception as exc:
-        logger.warning("School model unavailable; using fallback: %s", exc)
+        logger.warning(
+            "School model unavailable; using fallback: %s",
+            exc,
+        )
         _school_model = None
         _school_meta = None
 
@@ -86,12 +90,15 @@ def _load_university_artifact():
 
     _university_load_attempted = True
 
-    # Possible future artifact names. None are required for Track A.
+    # Possible future artifact names.
+    # None are required for Track A.
     model_path = ARTIFACT_DIR / "university_model.joblib"
     meta_path = ARTIFACT_DIR / "university_model_meta.json"
 
     if not model_path.exists() or not meta_path.exists():
-        logger.warning("University model artifact not found; using fallback.")
+        logger.warning(
+            "University model artifact not found; using fallback."
+        )
         return None, None
 
     try:
@@ -103,28 +110,25 @@ def _load_university_artifact():
             _university_meta = json.load(handle)
 
         logger.info("University model loaded successfully.")
+
     except Exception as exc:
-        logger.warning("University model unavailable; using fallback: %s", exc)
+        logger.warning(
+            "University model unavailable; using fallback: %s",
+            exc,
+        )
         _university_model = None
         _university_meta = None
 
     return _university_model, _university_meta
 
 
-def _risk_tier(probability: float, thresholds: dict[str, Any] | None) -> str:
-    """Convert probability into the illustrative model-derived tier."""
-    if thresholds is None:
-        low_max = 0.33
-        medium_max = 0.66
-    else:
-        low_max = float(thresholds.get("low_max", 0.33))
-        medium_max = float(thresholds.get("medium_max", 0.66))
+def _risk_tier(
+    probability: float,
+    thresholds: dict[str, Any] | None,
+) -> str:
+    """Convert probability into binary Low/High risk."""
 
-    if probability <= low_max:
-        return "Low"
-    if probability <= medium_max:
-        return "Medium"
-    return "High"
+    return "High" if probability >= 0.5 else "Low"
 
 
 def _common_response(
@@ -135,14 +139,21 @@ def _common_response(
     thresholds: dict[str, Any] | None,
     interventions: list[dict],
 ) -> dict:
-    """Build the frozen common response envelope."""
-    probability = max(0.0, min(1.0, float(probability)))
-    risk_tier = _risk_tier(probability, thresholds)
+    """Build the common response envelope."""
+
+    probability = max(
+        0.0,
+        min(1.0, float(probability)),
+    )
+
+    risk_tier = _risk_tier(
+        probability,
+        thresholds,
+    )
 
     return {
         "risk_probability": probability,
         "risk_tier": risk_tier,
-        "risk_tier_label": "Model-derived illustrative risk tier",
         "model_loaded": model_loaded,
         "model_version": model_version,
         "interventions": interventions,
@@ -161,7 +172,10 @@ def _school_fallback_probability(input_dict: dict) -> float:
     if input_dict.get("Infrastructure") == "Poor":
         score += 0.20
 
-    if input_dict.get("Teaching_Staff") in {"Poor", "Inadequate"}:
+    if input_dict.get("Teaching_Staff") in {
+        "Poor",
+        "Inadequate",
+    }:
         score += 0.15
 
     if input_dict.get("Socioeconomic_Status") == "Low":
@@ -173,18 +187,27 @@ def _school_fallback_probability(input_dict: dict) -> float:
     age = input_dict.get("Age")
     standard = input_dict.get("Standard")
 
-    if isinstance(age, (int, float)) and isinstance(standard, (int, float)):
+    if isinstance(age, (int, float)) and isinstance(
+        standard,
+        (int, float),
+    ):
         if age >= standard + 8:
             score += 0.15
 
-    return max(0.02, min(0.95, score))
+    return max(
+        0.02,
+        min(0.95, score),
+    )
 
 
 def _university_fallback_probability(input_dict: dict) -> float:
     """Deterministic university fallback scorer."""
     score = 0.15
 
-    if input_dict.get("debtor") is True or input_dict.get("debtor") == 1:
+    if (
+        input_dict.get("debtor") is True
+        or input_dict.get("debtor") == 1
+    ):
         score += 0.20
 
     if input_dict.get("tuition_fees_up_to_date") is False:
@@ -193,13 +216,21 @@ def _university_fallback_probability(input_dict: dict) -> float:
     if input_dict.get("scholarship_holder") is False:
         score += 0.10
 
-    return max(0.02, min(0.95, score))
+    return max(
+        0.02,
+        min(0.95, score),
+    )
 
 
 def _prepare_school_input(input_dict: dict) -> dict:
     """Remove unsupported target/leakage fields without mutating input."""
     cleaned = dict(input_dict)
-    cleaned.pop("Dropout_Reason", None)
+
+    cleaned.pop(
+        "Dropout_Reason",
+        None,
+    )
+
     return cleaned
 
 
@@ -209,36 +240,65 @@ def _model_probability(
     input_dict: dict,
 ) -> float:
     """Run predict_proba and select the positive class from metadata."""
+
     cleaned = dict(input_dict)
 
     feature_order = meta["feature_order"]
+
     row = {
         feature: cleaned.get(feature)
         for feature in feature_order
     }
 
     frame = pd.DataFrame([row])
-    positive_index = int(meta["positive_class_index"])
 
-    return float(model.predict_proba(frame)[0][positive_index])
+    positive_index = int(
+        meta["positive_class_index"]
+    )
+
+    return float(
+        model.predict_proba(frame)[0][positive_index]
+    )
 
 
 def predict_school(input_dict: dict) -> dict:
     """Predict school dropout risk."""
+
     if not isinstance(input_dict, dict):
-        raise TypeError("input_dict must be a dictionary")
+        raise TypeError(
+            "input_dict must be a dictionary"
+        )
 
     cleaned = _prepare_school_input(input_dict)
+
     model, meta = _load_school_artifact()
 
     if model is not None and meta is not None:
         try:
-            probability = _model_probability(model, meta, cleaned)
-            thresholds = meta.get("risk_thresholds")
-            version = meta.get("model_version", "unknown")
+            probability = _model_probability(
+                model,
+                meta,
+                cleaned,
+            )
 
-            risk_tier = _risk_tier(probability, thresholds)
-            interventions = recommend_school(cleaned, risk_tier)
+            thresholds = meta.get(
+                "risk_thresholds"
+            )
+
+            version = meta.get(
+                "model_version",
+                "unknown",
+            )
+
+            risk_tier = _risk_tier(
+                probability,
+                thresholds,
+            )
+
+            interventions = recommend_school(
+                cleaned,
+                risk_tier,
+            )
 
             return _common_response(
                 probability=probability,
@@ -247,15 +307,26 @@ def predict_school(input_dict: dict) -> dict:
                 thresholds=thresholds,
                 interventions=interventions,
             )
+
         except Exception as exc:
             logger.warning(
                 "School model prediction failed; using fallback: %s",
                 exc,
             )
 
-    probability = _school_fallback_probability(cleaned)
-    risk_tier = _risk_tier(probability, None)
-    interventions = recommend_school(cleaned, risk_tier)
+    probability = _school_fallback_probability(
+        cleaned
+    )
+
+    risk_tier = _risk_tier(
+        probability,
+        None,
+    )
+
+    interventions = recommend_school(
+        cleaned,
+        risk_tier,
+    )
 
     return _common_response(
         probability=probability,
@@ -268,22 +339,47 @@ def predict_school(input_dict: dict) -> dict:
 
 def predict_university(input_dict: dict) -> dict:
     """Predict university dropout risk."""
+
     if not isinstance(input_dict, dict):
-        raise TypeError("input_dict must be a dictionary")
+        raise TypeError(
+            "input_dict must be a dictionary"
+        )
 
     cleaned = dict(input_dict)
-    cleaned.pop("Dropout_Reason", None)
+
+    cleaned.pop(
+        "Dropout_Reason",
+        None,
+    )
 
     model, meta = _load_university_artifact()
 
     if model is not None and meta is not None:
         try:
-            probability = _model_probability(model, meta, cleaned)
-            thresholds = meta.get("risk_thresholds")
-            version = meta.get("model_version", "unknown")
+            probability = _model_probability(
+                model,
+                meta,
+                cleaned,
+            )
 
-            risk_tier = _risk_tier(probability, thresholds)
-            interventions = recommend_university(cleaned, risk_tier)
+            thresholds = meta.get(
+                "risk_thresholds"
+            )
+
+            version = meta.get(
+                "model_version",
+                "unknown",
+            )
+
+            risk_tier = _risk_tier(
+                probability,
+                thresholds,
+            )
+
+            interventions = recommend_university(
+                cleaned,
+                risk_tier,
+            )
 
             return _common_response(
                 probability=probability,
@@ -292,15 +388,26 @@ def predict_university(input_dict: dict) -> dict:
                 thresholds=thresholds,
                 interventions=interventions,
             )
+
         except Exception as exc:
             logger.warning(
                 "University model prediction failed; using fallback: %s",
                 exc,
             )
 
-    probability = _university_fallback_probability(cleaned)
-    risk_tier = _risk_tier(probability, None)
-    interventions = recommend_university(cleaned, risk_tier)
+    probability = _university_fallback_probability(
+        cleaned
+    )
+
+    risk_tier = _risk_tier(
+        probability,
+        None,
+    )
+
+    interventions = recommend_university(
+        cleaned,
+        risk_tier,
+    )
 
     return _common_response(
         probability=probability,
@@ -313,12 +420,16 @@ def predict_university(input_dict: dict) -> dict:
 
 def health() -> dict:
     """Report whether each inference engine has a live artifact."""
+
     school_model, school_meta = _load_school_artifact()
     university_model, university_meta = _load_university_artifact()
 
     return {
         "school": {
-            "model_loaded": school_model is not None and school_meta is not None,
+            "model_loaded": (
+                school_model is not None
+                and school_meta is not None
+            ),
             "model_version": (
                 school_meta.get("model_version")
                 if school_meta is not None

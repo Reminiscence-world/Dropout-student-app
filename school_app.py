@@ -1,15 +1,34 @@
 import streamlit as st
 
-from src.inference import predict_school
-
 
 st.set_page_config(
     page_title="School Dashboard",
     page_icon="🏫",
 )
 
-st.title("School Dropout Risk")
+pages = [
+    st.Page(
+        "school_pages/1_School_Dashboard.py",
+        title="School Dashboard",
+        icon="🏫",
+    ),
+    st.Page(
+        "school_pages/2_Student_Explorer.py",
+        title="Student Explorer",
+        icon="👨‍🎓",
+    ),
+    st.Page(
+        "school_pages/3_Model_Evaluation.py",
+        title="Model Evaluation",
+        icon="📊",
+    ),
+    st.Page(
+        "school_pages/4_About_Limitations.py",
+        title="About & Limitations",
+        icon="ℹ️",
+    ),
+]
 
-st.write("School dashboard")
+pg = st.navigation(pages)
 
-st.success("School inference engine connected successfully.")
+pg.run()

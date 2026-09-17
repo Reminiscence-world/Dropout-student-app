@@ -1,6 +1,6 @@
 {
   "model_version": "school_dropout_v1",
-  "trained_at": "2026-09-17T17:47:49.992728+00:00",
+  "trained_at": "2026-09-17T22:27:30.407991+00:00",
   "positive_class": "Dropout",
   "positive_class_index": 0,
   "feature_order": [
@@ -63,25 +63,25 @@
     ]
   },
   "risk_thresholds": {
-    "low_max": 0.0,
-    "medium_max": 1.0
+    "low_medium": 0.0,
+    "medium_high": 1.0
   },
   "metrics": {
-    "accuracy": 0.9970588235294118,
+    "accuracy": 0.9980392156862745,
     "dropout_precision": 1.0,
-    "dropout_recall": 0.9949958298582152,
-    "dropout_f1": 0.9974916387959866,
+    "dropout_recall": 0.9966638865721434,
+    "dropout_f1": 0.9983291562238931,
     "confusion_matrix": [
       [
-        1193,
-        6
+        1195,
+        4
       ],
       [
         0,
         841
       ]
     ],
-    "cv_f1_mean": 0.9968719483744038,
-    "cv_f1_std": 0.0008720669479533169
+    "cv_f1_mean": 0.9967681609457916,
+    "cv_f1_std": 0.0008334034693073843
   }
 }
