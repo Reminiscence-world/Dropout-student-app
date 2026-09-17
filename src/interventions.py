@@ -1,72 +1,158 @@
 """
-Ticket 8: interventions.py — rule table mapping each actionable
-variable, when it shows up as a risk-increasing contributor to a
-student's SHAP explanation, to a suggested intervention.
+Track B: deterministic intervention recommendations.
 
-Per spec section 9's mandatory phrasing rule: every suggestion is
-framed as "suggested based on this student's risk-associated factors"
-— never as a promise like "this will reduce their risk by X%." Per
-spec section 13, demographic/fixed variables must NEVER appear as the
-reason for a recommendation — this module only ever looks at actionable
-variables, and only when they're pushing risk up for this student.
+These are routing heuristics, not ML predictions or proven treatments.
+Demographic attributes such as Gender and Caste are never used as
+recommendation rationales.
 """
 
-from src.variable_roles import ACTIONABLE
 
-INTERVENTION_RULES = {
-    "tuition_fees_up_to_date": "Financial aid / payment plan review",
-    "debtor": "Financial counseling referral",
-    "scholarship_holder": "Scholarship eligibility review",
-}
-
-# scholarship_holder only triggers a suggestion when the student is
-# ALSO in the High risk tier — per spec section 9's rule is "not a
-# scholarship holder + high risk", not "not a scholarship holder" alone.
-SCHOLARSHIP_REQUIRES_HIGH_RISK = "scholarship_holder"
+def _is_high_or_medium(risk_tier: str) -> bool:
+    return risk_tier in {"Medium", "High"}
 
 
-def suggest_interventions(explanation: list, risk_tier: str, student_row=None) -> list:
-    """
-    explanation: output of explain.explain_student() — a list of dicts
-      with "feature", "student_value", "shap_value", "direction".
-    risk_tier: "Low" / "Medium" / "High" for this student (from
-      risk_tiers.assign_risk_tiers).
-    student_row: pandas Series representing the student's record (optional).
+def recommend_school(input_dict: dict, risk_tier: str) -> list[dict]:
+    """Return deterministic school-support recommendations."""
+    recommendations = []
 
-    Returns a list of suggestion strings, each already phrased per the
-    spec's mandatory wording.
-    """
-    suggestions = []
+    socioeconomic = input_dict.get("Socioeconomic_Status")
+    infrastructure = input_dict.get("Infrastructure")
+    teaching_staff = input_dict.get("Teaching_Staff")
+    location = input_dict.get("Location")
+    age = input_dict.get("Age")
+    standard = input_dict.get("Standard")
 
-    # 1. Actionable financial levers from SHAP explanation
-    for item in explanation:
-        feature = item["feature"]
-        is_risk_increasing = item["direction"] == "increases risk"
+    if socioeconomic == "Low":
+        recommendations.append({
+            "code": "FIN_SUPPORT",
+            "title": "Fee waiver / scholarship eligibility review",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "in the financial-support area."
+            ),
+        })
 
-        if feature not in ACTIONABLE or not is_risk_increasing:
-            continue
+    if infrastructure == "Poor":
+        recommendations.append({
+            "code": "INFRA_ESCALATE",
+            "title": "Flag facility gap to district authority",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "in the infrastructure area."
+            ),
+        })
 
-        if feature == SCHOLARSHIP_REQUIRES_HIGH_RISK and risk_tier != "High":
-            continue
+    if teaching_staff in {"Poor", "Inadequate"}:
+        recommendations.append({
+            "code": "STAFF_GAP",
+            "title": "Staffing / teaching-support escalation",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "in the teaching-support area."
+            ),
+        })
 
-        rule_text = INTERVENTION_RULES.get(feature)
-        if rule_text:
-            formatted_text = f"{rule_text} — suggested based on this student's risk-associated factors."
-            if formatted_text not in suggestions:
-                suggestions.append(formatted_text)
+    if location == "Rural" and _is_high_or_medium(risk_tier):
+        recommendations.append({
+            "code": "ACCESS_SUPPORT",
+            "title": "Transport or residential access review",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "in the access-support area."
+            ),
+        })
 
-    # 2. Academic Support Lever (only trigger for Medium & High risk tiers)
-    if student_row is not None and risk_tier in ["Medium", "High"]:
-        col_approved = [c for c in student_row.index if "approved" in c.lower() and "2nd" in c.lower()]
-        col_enrolled = [c for c in student_row.index if "enrolled" in c.lower() and "2nd" in c.lower()]
+    if isinstance(age, (int, float)) and isinstance(standard, (int, float)):
+        expected_age = standard + 6
+        if age >= expected_age + 2:
+            recommendations.append({
+                "code": "AGE_GAP_REVIEW",
+                "title": "Over-age-for-grade: remedial/bridge review",
+                "rationale": (
+                    "This student's profile shows an associated risk factor "
+                    "in the age-for-grade area."
+                ),
+            })
 
-        if col_approved and col_enrolled:
-            approved = student_row[col_approved[0]]
-            enrolled = student_row[col_enrolled[0]]
+    if risk_tier == "High" and not recommendations:
+        recommendations.append({
+            "code": "GENERIC_COUNSEL",
+            "title": "Priority counselling outreach",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "that warrants priority counselling outreach."
+            ),
+        })
 
-            if enrolled > 0 and approved < enrolled:
-                academic_text = "Academic tutoring / credit load counseling — suggested based on this student's risk-associated factors."
-                if academic_text not in suggestions:
-                    suggestions.append(academic_text)
+    if not recommendations:
+        recommendations.append({
+            "code": "GENERAL_SUPPORT",
+            "title": "General student support review",
+            "rationale": (
+                "This student's profile does not identify a specific "
+                "routing heuristic, so a general support review is suggested."
+            ),
+        })
 
-    return suggestions
+    return recommendations
+
+
+def recommend_university(input_dict: dict, risk_tier: str) -> list[dict]:
+    """Return deterministic university-support recommendations."""
+    recommendations = []
+
+    debtor = input_dict.get("debtor")
+    tuition_due = input_dict.get("tuition_fees_up_to_date")
+    scholarship_holder = input_dict.get("scholarship_holder")
+
+    if debtor is True or debtor == 1:
+        recommendations.append({
+            "code": "FIN_SUPPORT",
+            "title": "Financial counseling referral",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "in the financial-support area."
+            ),
+        })
+
+    if tuition_due is False or tuition_due == 0:
+        recommendations.append({
+            "code": "PAYMENT_REVIEW",
+            "title": "Financial aid / payment plan review",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "in the tuition-payment area."
+            ),
+        })
+
+    if scholarship_holder is False and risk_tier == "High":
+        recommendations.append({
+            "code": "SCHOLARSHIP_REVIEW",
+            "title": "Scholarship eligibility review",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "in the financial-support area."
+            ),
+        })
+
+    if risk_tier == "High" and not recommendations:
+        recommendations.append({
+            "code": "GENERIC_COUNSEL",
+            "title": "Priority counselling outreach",
+            "rationale": (
+                "This student's profile shows an associated risk factor "
+                "that warrants priority counselling outreach."
+            ),
+        })
+
+    if not recommendations:
+        recommendations.append({
+            "code": "GENERAL_SUPPORT",
+            "title": "General student support review",
+            "rationale": (
+                "This student's profile does not identify a specific "
+                "routing heuristic, so a general support review is suggested."
+            ),
+        })
+
+    return recommendations
