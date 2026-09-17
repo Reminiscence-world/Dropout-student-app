@@ -8,6 +8,7 @@ Highlights the model actually used by the application.
 """
 
 import streamlit as st
+from utils import add_sidebar_logo
 import pandas as pd
 import plotly.express as px
 
@@ -34,7 +35,7 @@ st.set_page_config(
     page_icon="📊",
     layout="wide"
 )
-
+add_sidebar_logo()
 
 # ============================================================
 # AETION COLOUR THEME
