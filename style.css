@@ -5,26 +5,26 @@ html, body, [class*="css"] {
 }
 
 .stApp {
-    background-color: #F8F9FA;
+    background-color: #DCE8F5;
 }
 
 [data-testid="stMetric"] {
     background: white;
     padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
-    border-left: 5px solid #8BC34A;
+    border-radius: 20px;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
+    border-left: 5px solid #2E73B8;
 }
 
 h1 {
-    color: #0F3D2E;
+    color: #1E2A4A !important;
+    font-weight: 700;
 }
 
 h2, h3 {
-    color: #0F3D2E;
+    color: #1E2A4A !important;
 }
 
-/* Force all text to black */
 
 html, body, p, span, div, label {
     color: black !important;
@@ -65,7 +65,7 @@ h1, h2, h3, h4, h5, h6 {
 [data-testid="stSidebar"] {
     background: linear-gradient(
         180deg,
-        #0F3D2E 0%,
-        #1B1F3A 100%
+        #1E2A4A 0%,
+        #243A73 100%
     );
 }
