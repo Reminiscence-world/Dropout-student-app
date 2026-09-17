@@ -113,7 +113,7 @@ with col1:
         paper_bgcolor="white",
         plot_bgcolor="white",
         font=dict(
-            color="#1E2A4A",
+            color="black",
             size=14
         ),
         title_font=dict(
@@ -156,7 +156,7 @@ with col2:
         paper_bgcolor="white",
         plot_bgcolor="white",
         font=dict(
-            color="#1E2A4A",
+            color="black",
             size=14
         ),
         xaxis=dict(
