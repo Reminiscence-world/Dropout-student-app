@@ -20,24 +20,44 @@ from src.variable_roles import CONFOUNDER
 
 st.set_page_config(page_title="Causal Insights", layout="wide")
 
-st.title("Causal Insights")
-st.caption(
-    "Confounder-adjusted associations for the 3 actionable variables — a "
-    "cohort-level question, distinct from the per-student SHAP explanations "
-    "on Student Explorer."
-)
+st.markdown("""
+<div style="
+padding:25px;
+background:linear-gradient(135deg,#1E2A4A,#2E73B8);
+border-radius:20px;
+margin-bottom:20px;
+">
+<h1 style="color:white;">📊 Causal Insights</h1>
+<p style="color:white;">
+Confounder-adjusted associations across the cohort.
+This is a cohort-level analysis and is distinct from the individual SHAP explanations.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
-st.info(
-    "**SHAP (Student Explorer) vs. Causal Adjustment (this page)**\n\n"
-    "- **SHAP** answers: *\"why did the model flag THIS student?\"* — a "
-    "property of the trained model's prediction for one person.\n"
-    "- **Causal adjustment** answers: *\"among students who otherwise look "
-    "similar on measured confounders, is this actionable factor associated "
-    "with a different dropout rate, across the whole cohort?\"*\n\n"
-    "Neither is a randomized-experiment causal effect. The estimates below "
-    "specifically assume the confounder set captures the important "
-    "differences between students."
-)
+st.markdown("""
+<div style="
+background:white;
+padding:20px;
+border-radius:15px;
+border-left:5px solid #2E73B8;
+box-shadow:0px 2px 6px rgba(0,0,0,0.05);
+">
+
+<b>SHAP (Student Explorer) vs. Causal Adjustment (this page)</b>
+
+<br><br>
+
+• <b>SHAP</b> answers:
+<i>"why did the model flag THIS student?"</i>
+
+<br><br>
+
+• <b>Causal adjustment</b> answers:
+<i>"among students who otherwise look similar on measured confounders, is this actionable factor associated with a different dropout rate?"</i>
+
+</div>
+""", unsafe_allow_html=True)
 
 df = load_and_clean_data()
 df = build_binary_target(df)
@@ -61,26 +81,81 @@ errors_plus = [h - c for h, c in zip(ci_high, coefs)]
 errors_minus = [c - l for c, l in zip(coefs, ci_low)]
 
 fig = go.Figure()
+fig.update_layout(
+    title="Adjusted association with dropout probability (percentage points, 95% CI)",
+    xaxis_title="Percentage-point change in dropout probability",
+    yaxis_title="",
+
+    paper_bgcolor="white",
+    plot_bgcolor="white",
+
+    font=dict(
+        color="black",
+        size=14
+    ),
+
+    title_font=dict(
+        color="black",
+        size=18
+    ),
+
+    xaxis=dict(
+        tickfont=dict(color="black"),
+        title_font=dict(color="black"),
+        gridcolor="#E6EEF8"
+    ),
+
+    yaxis=dict(
+        tickfont=dict(color="black"),
+        title_font=dict(color="black")
+    ),
+
+    margin=dict(
+        l=20,
+        r=20,
+        t=60,
+        b=20
+    )
+)
 fig.add_trace(go.Bar(
     x=coefs,
     y=labels,
     orientation="h",
     error_x=dict(type="data", symmetric=False, array=errors_plus, arrayminus=errors_minus),
-    marker_color=["#d62728" if c > 0 else "#2ca02c" for c in coefs],
+    marker_color=["#2E73B8" if c > 0 else "#5EA4F3" for c in coefs],
 ))
-fig.update_layout(
-    title="Adjusted association with dropout probability (percentage points, 95% CI)",
-    xaxis_title="Percentage-point change in dropout probability",
-    yaxis_title="",
-)
 st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
 for actionable_var, result in causal_results.items():
-    st.markdown(f"### {actionable_var}")
-    st.write(result_to_text(actionable_var, result))
-    st.markdown("")
+    st.markdown(f"""
+    <div style="
+    background:white;
+    padding:18px;
+    border-radius:15px;
+    margin-bottom:15px;
+    box-shadow:0px 2px 6px rgba(0,0,0,0.05);
+    ">
+    <h3 style="color:#1E2A4A;">
+        {actionable_var}
+    </h3>
+    <p style="color:black;">
+        {result_to_text(actionable_var, result)}
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.divider()
-st.warning(f"**Assumption behind every number on this page:** {ASSUMPTION_CAVEAT}")
+st.markdown(f"""
+<div style="
+background:#E7F0FB;
+padding:20px;
+border-radius:15px;
+border-left:5px solid #2E73B8;
+margin-top:15px;
+">
+<b>Assumption behind every number on this page:</b><br><br>
+{ASSUMPTION_CAVEAT}
+</div>
+""", unsafe_allow_html=True)
