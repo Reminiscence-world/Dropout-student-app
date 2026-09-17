@@ -20,6 +20,12 @@ from src.explain import build_explainer, get_shap_values_for_test_set, explain_s
 from src.risk_tiers import assign_risk_tiers, TIER_CAVEAT
 from src.interventions import suggest_interventions
 
+with open("style.css") as f:
+    st.markdown(
+        f"<style>{f.read()}</style>",
+        unsafe_allow_html=True
+    )
+
 st.markdown("""
 <div style="
 padding:25px;
