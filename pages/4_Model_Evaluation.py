@@ -41,10 +41,10 @@ st.set_page_config(
 
 st.markdown(
     """
-<style>
+    <style>
 
     /* ========================================================
-       MAIN BACKGROUND
+       MAIN PAGE
        ======================================================== */
 
     .stApp {
@@ -54,18 +54,16 @@ st.markdown(
     /* Main text */
     .stApp p,
     .stApp label,
-    .stApp span,
-    .stApp div {
+    .stApp span {
         color: #000000;
     }
 
-    /* Headings */
+    /* Main headings */
     h1, h2, h3, h4 {
         color: #000000 !important;
     }
 
-    /* Secondary / caption text */
-    .stCaption,
+    /* Captions */
     [data-testid="stCaptionContainer"] {
         color: #5B6B7F !important;
     }
@@ -83,11 +81,10 @@ st.markdown(
         background-color: #263D73 !important;
     }
 
-    /* Sidebar text */
+    /* Sidebar text = WHITE */
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] div,
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
     [data-testid="stSidebar"] h3,
@@ -114,10 +111,8 @@ st.markdown(
         );
 
         border-radius: 20px;
-
-        padding: 32px 36px;
-
-        margin-bottom: 24px;
+        padding: 30px 34px;
+        margin-bottom: 22px;
 
         box-shadow:
             0 8px 22px rgba(32, 47, 87, 0.18);
@@ -139,54 +134,38 @@ st.markdown(
 
 
     /* ========================================================
-       SECTION TITLES
-       ======================================================== */
-
-    .section-title {
-        color: #000000 !important;
-        font-size: 24px;
-        font-weight: 700;
-        margin-top: 8px;
-        margin-bottom: 8px;
-    }
-
-
-    /* ========================================================
        CHOSEN MODEL CARD
        ======================================================== */
 
-    .chosen-model {
-        background: #FFFFFF;
-
+    .chosen-model-card {
+        background-color: #FFFFFF;
         border-left: 6px solid #2E73B8;
-
         border-radius: 16px;
 
         padding: 20px 24px;
-
-        margin: 18px 0 24px 0;
+        margin-bottom: 24px;
 
         box-shadow:
             0 6px 18px rgba(32, 47, 87, 0.10);
     }
 
-    .chosen-label {
+    .chosen-model-label {
         color: #5B6B7F !important;
         font-size: 13px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        margin-bottom: 5px;
+        letter-spacing: 0.5px;
     }
 
-    .chosen-name {
+    .chosen-model-name {
         color: #000000 !important;
         font-size: 25px;
         font-weight: 700;
-        margin-bottom: 7px;
+        margin-top: 4px;
+        margin-bottom: 6px;
     }
 
-    .chosen-description {
+    .chosen-model-description {
         color: #5B6B7F !important;
         font-size: 14px;
         line-height: 1.5;
@@ -212,32 +191,14 @@ st.markdown(
 
     [data-testid="stMetricLabel"] {
         color: #5B6B7F !important;
-        font-size: 14px;
     }
 
     [data-testid="stMetricValue"] {
         color: #000000 !important;
-        font-size: 30px;
     }
 
     [data-testid="stMetricDelta"] {
         color: #000000 !important;
-    }
-
-
-    /* ========================================================
-       WHITE CONTENT CARDS
-       ======================================================== */
-
-    .content-card {
-        background-color: #FFFFFF;
-
-        border-radius: 16px;
-
-        padding: 20px;
-
-        box-shadow:
-            0 6px 18px rgba(32, 47, 87, 0.10);
     }
 
 
@@ -252,7 +213,7 @@ st.markdown(
 
 
     /* ========================================================
-       PLOTLY CHART
+       PLOTLY
        ======================================================== */
 
     [data-testid="stPlotlyChart"] {
@@ -260,10 +221,19 @@ st.markdown(
 
         border-radius: 16px;
 
-        padding: 12px;
+        padding: 10px;
 
         box-shadow:
             0 6px 18px rgba(32, 47, 87, 0.08);
+    }
+
+
+    /* ========================================================
+       ALERTS
+       ======================================================== */
+
+    [data-testid="stAlert"] {
+        border-radius: 14px;
     }
 
 
@@ -277,16 +247,7 @@ st.markdown(
 
 
     /* ========================================================
-       SUCCESS / INFO BOX
-       ======================================================== */
-
-    [data-testid="stAlert"] {
-        border-radius: 14px;
-    }
-
-
-    /* ========================================================
-       RESPONSIVE
+       MOBILE
        ======================================================== */
 
     @media (max-width: 768px) {
@@ -299,14 +260,14 @@ st.markdown(
             font-size: 30px;
         }
 
-        .chosen-name {
+        .chosen-model-name {
             font-size: 21px;
         }
 
     }
 
-</style>
-""",
+    </style>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -318,14 +279,12 @@ st.markdown(
 st.markdown(
     """
     <div class="model-hero">
-
         <h1>📊 Model Evaluation</h1>
 
         <p>
             Compare Logistic Regression and Random Forest on the same
             held-out test split and evaluate the model used by AETION.
         </p>
-
     </div>
     """,
     unsafe_allow_html=True,
@@ -333,7 +292,7 @@ st.markdown(
 
 
 # ============================================================
-# LOAD DATA
+# LOAD DATA + EVALUATE MODELS
 # ============================================================
 
 df = load_and_clean_data()
@@ -347,17 +306,17 @@ eval_results = evaluate_both_models(df)
 
 st.markdown(
     f"""
-    <div class="chosen-model">
+    <div class="chosen-model-card">
 
-        <div class="chosen-label">
+        <div class="chosen-model-label">
             Model selected for AETION
         </div>
 
-        <div class="chosen-name">
+        <div class="chosen-model-name">
             ✓ {CHOSEN_MODEL}
         </div>
 
-        <div class="chosen-description">
+        <div class="chosen-model-description">
             {JUSTIFICATION}
         </div>
 
@@ -368,45 +327,60 @@ st.markdown(
 
 
 # ============================================================
-# QUICK MODEL METRICS
+# PERFORMANCE OVERVIEW
 # ============================================================
 
-st.markdown(
-    '<div class="section-title">Performance Overview</div>',
-    unsafe_allow_html=True,
+st.subheader("Performance Overview")
+
+st.caption(
+    "A quick comparison of the two models on the same held-out test set."
 )
 
-# Extract results safely
-lr_results = eval_results.get("Logistic Regression")
-rf_results = eval_results.get("Random Forest")
+
+if "Logistic Regression" in eval_results:
+
+    lr = eval_results["Logistic Regression"]
+
+else:
+
+    lr = None
 
 
-if lr_results and rf_results:
+if "Random Forest" in eval_results:
+
+    rf = eval_results["Random Forest"]
+
+else:
+
+    rf = None
+
+
+if lr is not None and rf is not None:
 
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.metric(
             "Logistic Regression Accuracy",
-            f"{lr_results['accuracy']:.2%}",
+            f"{lr['accuracy']:.2%}",
         )
 
     with col2:
         st.metric(
             "Random Forest Accuracy",
-            f"{rf_results['accuracy']:.2%}",
+            f"{rf['accuracy']:.2%}",
         )
 
     with col3:
         st.metric(
             "LR Dropout Recall",
-            f"{lr_results['dropout_recall']:.2%}",
+            f"{lr['dropout_recall']:.2%}",
         )
 
     with col4:
         st.metric(
             "RF Dropout Recall",
-            f"{rf_results['dropout_recall']:.2%}",
+            f"{rf['dropout_recall']:.2%}",
         )
 
 
@@ -416,10 +390,7 @@ if lr_results and rf_results:
 
 st.divider()
 
-st.markdown(
-    '<div class="section-title">Metrics Side by Side</div>',
-    unsafe_allow_html=True,
-)
+st.subheader("Metrics Side by Side")
 
 st.caption(
     "Both models are evaluated using the identical held-out test split."
@@ -460,15 +431,17 @@ st.dataframe(
 
 
 # ============================================================
-# PERFORMANCE CHART
+# MODEL PERFORMANCE CHART
 # ============================================================
 
 st.divider()
 
-st.markdown(
-    '<div class="section-title">Model Performance Comparison</div>',
-    unsafe_allow_html=True,
+st.subheader("Model Performance Comparison")
+
+st.caption(
+    "Higher values indicate stronger performance for the corresponding metric."
 )
+
 
 chart_df = summary_df.reset_index()[
     [
@@ -478,6 +451,7 @@ chart_df = summary_df.reset_index()[
         "Dropout recall",
     ]
 ]
+
 
 chart_df_melted = chart_df.melt(
     id_vars="Model",
@@ -492,7 +466,9 @@ fig = px.bar(
     y="Score",
     color="Model",
     barmode="group",
-    title="Accuracy and Dropout-Class Performance",
+
+    title="Accuracy vs. Dropout-Class Precision and Recall",
+
     color_discrete_sequence=[
         "#2E73B8",
         "#5EA4F3",
@@ -520,11 +496,9 @@ fig.update_layout(
         tickfont=dict(
             color="#000000",
         ),
-
         title_font=dict(
             color="#000000",
         ),
-
         gridcolor="#E6EEF8",
     ),
 
@@ -532,13 +506,10 @@ fig.update_layout(
         tickfont=dict(
             color="#000000",
         ),
-
         title_font=dict(
             color="#000000",
         ),
-
         gridcolor="#E6EEF8",
-
         range=[0, 1],
     ),
 
@@ -546,7 +517,6 @@ fig.update_layout(
         font=dict(
             color="#000000",
         ),
-
         bgcolor="#FFFFFF",
     ),
 
@@ -571,8 +541,8 @@ st.plotly_chart(
 
 
 st.caption(
-    "Dropout-class precision and recall are shown separately from "
-    "overall accuracy to assess how well each model identifies the "
+    "Dropout precision and recall are shown separately from overall "
+    "accuracy to assess how effectively each model identifies the "
     "dropout class."
 )
 
@@ -583,14 +553,11 @@ st.caption(
 
 st.divider()
 
-st.markdown(
-    '<div class="section-title">Confusion Matrices</div>',
-    unsafe_allow_html=True,
-)
+st.subheader("Confusion Matrices")
 
 st.caption(
-    "These matrices show how each model's predictions compare with "
-    "the actual outcomes in the held-out test set."
+    "Comparison between the models' predictions and the actual outcomes "
+    "in the held-out test set."
 )
 
 
@@ -601,45 +568,37 @@ for col, (name, r) in zip(cols, eval_results.items()):
 
     with col:
 
-        label = (
-            f"{name} ✓"
-            if name == CHOSEN_MODEL
-            else name
-        )
+        if name == CHOSEN_MODEL:
 
-        st.markdown(
-            f"""
-            <div style="
-                background:#FFFFFF;
-                border-left:5px solid #2E73B8;
-                border-radius:14px;
-                padding:15px 18px;
-                margin-bottom:12px;
-                box-shadow:0 5px 15px rgba(32,47,87,0.08);
-            ">
-                <div style="
-                    color:#000000;
-                    font-size:17px;
-                    font-weight:700;
-                ">
-                    {label}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            st.markdown(
+                f"### ✓ {name}"
+            )
+
+            st.caption("Model used by AETION")
+
+        else:
+
+            st.markdown(
+                f"### {name}"
+            )
+
+            st.caption("Alternative model")
+
 
         cm_df = pd.DataFrame(
             r["confusion_matrix"],
+
             index=[
                 "Actual: Not Dropout",
                 "Actual: Dropout",
             ],
+
             columns=[
                 "Predicted: Not Dropout",
                 "Predicted: Dropout",
             ],
         )
+
 
         st.dataframe(
             cm_df,
@@ -648,37 +607,33 @@ for col, (name, r) in zip(cols, eval_results.items()):
 
 
 # ============================================================
-# INTERPRETATION NOTE
+# WHY THESE METRICS MATTER
 # ============================================================
 
 st.divider()
 
+st.subheader("Why These Metrics Matter")
+
 st.markdown(
     """
-    <div class="content-card">
+    **Accuracy** describes the proportion of all predictions that are
+    correct.
 
-        <div style="
-            color:#000000;
-            font-size:18px;
-            font-weight:700;
-            margin-bottom:8px;
-        ">
-            Why these metrics matter
-        </div>
+    **Dropout precision** measures how often students predicted as
+    dropouts actually belong to the dropout class.
 
-        <div style="
-            color:#5B6B7F;
-            font-size:14px;
-            line-height:1.6;
-        ">
-            Overall accuracy describes the proportion of all predictions
-            that are correct. Dropout precision measures how often students
-            predicted as dropouts actually belong to the dropout class,
-            while dropout recall measures how many of the actual dropout
-            cases the model identifies.
-        </div>
+    **Dropout recall** measures how many of the actual dropout cases
+    the model identifies.
+    """
+)
 
-    </div>
-    """,
-    unsafe_allow_html=True,
+
+# ============================================================
+# FINAL NOTE
+# ============================================================
+
+st.info(
+    "Model evaluation is performed on the held-out test data. "
+    "The selected Logistic Regression model is used by AETION "
+    "for its predictive workflow."
 )
