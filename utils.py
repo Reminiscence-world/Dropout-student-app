@@ -1,3 +1,4 @@
+import streamlit as st
 def add_sidebar_logo():
     st.markdown(
         """
