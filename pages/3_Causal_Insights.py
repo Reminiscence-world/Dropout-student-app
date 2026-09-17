@@ -12,6 +12,7 @@ other or reads either as a randomized-experiment causal effect.
 """
 
 import streamlit as st
+from utils import add_sidebar_logo
 import plotly.graph_objects as go
 
 from src.data_loader import load_and_clean_data, build_binary_target
@@ -25,6 +26,7 @@ with open("style.css") as f:
     )
     
 st.set_page_config(page_title="Causal Insights", layout="wide")
+add_sidebar_logo()
 
 st.markdown("""
 <style>
