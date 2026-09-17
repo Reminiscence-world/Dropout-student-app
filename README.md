@@ -1,2 +1,1 @@
-hi this is our project
-jhihihih
+Hello! We are Logical Errors!!!
