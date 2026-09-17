@@ -24,8 +24,70 @@ JUSTIFICATION = (
 
 st.set_page_config(page_title="Model Evaluation", layout="wide")
 
-st.title("Model Evaluation")
-st.caption("Logistic Regression vs. Random Forest, evaluated on the identical held-out test split.")
+st.markdown("""
+<style>
+
+/* Main background */
+.stApp {
+    background-color: #F4F8FC;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background-color: #FFFFFF;
+    border-right: 1px solid #DCE6F2;
+}
+
+/* Normal page headings */
+h2, h3 {
+    color: #1E2A4A;
+}
+
+/* Metric cards / containers */
+[data-testid="metric-container"] {
+    background-color: white;
+    border: 1px solid #DCE6F2;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+/* DataFrames */
+[data-testid="stDataFrame"] {
+    background-color: white;
+    border-radius: 15px;
+}
+
+/* Plotly chart container */
+[data-testid="stPlotlyChart"] {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+/* Success box */
+[data-testid="stAlert"] {
+    border-radius: 15px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div style="
+padding:25px;
+background:linear-gradient(135deg,#1E2A4A,#2E73B8);
+border-radius:20px;
+margin-bottom:20px;
+">
+<h1 style="color:white !important; margin-bottom:10px;">
+📊 Model Evaluation
+</h1>
+<p style="color:white !important; margin:0;">
+Logistic Regression vs. Random Forest, evaluated on the identical
+held-out test split.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
 df = load_and_clean_data()
 eval_results = evaluate_both_models(df)
@@ -57,6 +119,37 @@ fig = px.bar(
     color="Model",
     barmode="group",
     title="Accuracy vs. Dropout-class precision/recall",
+    color_discrete_sequence=["#2E73B8", "#5EA4F3"]
+)
+fig.update_layout(
+    paper_bgcolor="#FFFFFF",
+    plot_bgcolor="#F8FBFF",
+
+    font=dict(
+        color="#1E2A4A",
+        size=14
+    ),
+
+    title_font=dict(
+        color="#1E2A4A",
+        size=18
+    ),
+
+    xaxis=dict(
+        tickfont=dict(color="#1E2A4A"),
+        title_font=dict(color="#1E2A4A"),
+        gridcolor="#E6EEF8"
+    ),
+
+    yaxis=dict(
+        tickfont=dict(color="#1E2A4A"),
+        title_font=dict(color="#1E2A4A"),
+        gridcolor="#E6EEF8"
+    ),
+
+    legend=dict(
+        font=dict(color="#1E2A4A")
+    )
 )
 st.plotly_chart(fig, use_container_width=True)
 
