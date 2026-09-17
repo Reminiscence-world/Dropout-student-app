@@ -112,21 +112,27 @@ with col1:
     fig_tiers.update_layout(
         paper_bgcolor="white",
         plot_bgcolor="white",
+
         font=dict(
-            color="black",
-            size=14
+            color="black"
         ),
+    
         title_font=dict(
-            color="#1E2A4A",
-            size=20
+            color="black"
         ),
+    
         xaxis=dict(
-            showgrid=False,
-            linecolor="#D6E4F5"
+            tickfont=dict(color="black"),
+            title_font=dict(color="black")
         ),
+    
         yaxis=dict(
-            gridcolor="#E6EEF8",
-            linecolor="#D6E4F5"
+            tickfont=dict(color="black"),
+            title_font=dict(color="black")
+        ),
+    
+        legend=dict(
+            font=dict(color="black")
         )
     )
     st.plotly_chart(fig_tiers, use_container_width=True)
@@ -155,19 +161,29 @@ with col2:
     fig_course.update_layout(
         paper_bgcolor="white",
         plot_bgcolor="white",
+    
         font=dict(
-            color="black",
-            size=14
+            color="black"
         ),
+    
+        title_font=dict(
+            color="black"
+        ),
+    
         xaxis=dict(
-            showgrid=False,
-            linecolor="#D6E4F5"
+            tickfont=dict(color="black"),
+            title_font=dict(color="black")
         ),
+    
         yaxis=dict(
-            gridcolor="#E6EEF8",
-            linecolor="#D6E4F5"
+            tickfont=dict(color="black"),
+            title_font=dict(color="black")
+        ),
+    
+        legend=dict(
+            font=dict(color="black")
         )
-    )    
+    )
     st.plotly_chart(fig_course, use_container_width=True)
 
 
