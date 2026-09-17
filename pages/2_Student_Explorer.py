@@ -45,8 +45,31 @@ st.markdown("""
 
 /* Sidebar */
 [data-testid="stSidebar"] {
-    background-color: #FFFFFF;
-    border-right: 1px solid #DCE6F2;
+    background: linear-gradient(
+        180deg,
+        #1E2A4A 0%,
+        #243A73 100%
+    );
+}
+/* Sidebar text */
+
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: white !important;
+}
+/* Page names */
+
+[data-testid="stSidebarNav"] span {
+    color: white !important;
+}
+
+[data-testid="stSidebarNav"] a[aria-current="page"] {
+    background-color: rgba(255,255,255,0.15) !important;
+    border-radius: 10px;
 }
 
 /* Headers */
