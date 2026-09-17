@@ -8,234 +8,536 @@ language for an advisor (not a data scientist) audience.
 
 import streamlit as st
 
-st.set_page_config(page_title="About & Limitations", layout="wide")
 
-st.markdown(
-    """
-    <style>
-        /* ---------- App background ---------- */
-        .stApp {
-            background:
-                radial-gradient(circle at 1px 1px,
-                    rgba(43, 105, 160, 0.12) 1px,
-                    transparent 1px) 0 0 / 28px 28px,
-                linear-gradient(180deg, #edf6fc 0%, #f7fbfe 100%);
-            color: #172b4d;
-        }
+# ============================================================
+# PAGE CONFIG
+# ============================================================
 
-        /* ---------- White top header ---------- */
-        header[data-testid="stHeader"] {
-            background: rgba(255, 255, 255, 0.97);
-            border-bottom: 1px solid #dce7f1;
-        }
-
-        /* ---------- Main content ---------- */
-        .block-container {
-            max-width: 1180px;
-            padding-top: 3rem;
-            padding-bottom: 4rem;
-        }
-
-        /* ---------- AETiON brand ---------- */
-        .aetion-brand {
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 1.7rem;
-            font-weight: 700;
-            letter-spacing: -0.04em;
-            color: #17365d;
-            margin-bottom: 2.2rem;
-        }
-
-        .aetion-brand span {
-            color: #2f6fa3;
-        }
-
-        /* ---------- Hero ---------- */
-        .hero {
-            text-align: center;
-            margin: 0 auto 2.5rem auto;
-        }
-
-        .hero h1 {
-            color: #142b4b;
-            font-size: 2.6rem;
-            line-height: 1.15;
-            font-weight: 750;
-            letter-spacing: -0.035em;
-            margin: 0 0 0.65rem 0;
-        }
-
-        .hero p {
-            color: #63758a;
-            font-size: 1.05rem;
-            margin: 0;
-        }
-
-        /* ---------- Section cards ---------- */
-        .info-card {
-            background: rgba(255, 255, 255, 0.94);
-            border: 1px solid #dbe8f2;
-            border-radius: 18px;
-            padding: 1.45rem 1.6rem;
-            margin-bottom: 1.25rem;
-            box-shadow: 0 8px 28px rgba(35, 76, 112, 0.07);
-        }
-
-        .info-card h3 {
-            color: #183b63;
-            font-size: 1.2rem;
-            font-weight: 750;
-            margin: 0 0 0.9rem 0;
-        }
-
-        .info-card p,
-        .info-card li {
-            color: #52677d;
-            font-size: 0.96rem;
-            line-height: 1.65;
-        }
-
-        .info-card ul {
-            margin: 0;
-            padding-left: 1.25rem;
-        }
-
-        .info-card li {
-            margin-bottom: 0.65rem;
-        }
-
-        .info-card li:last-child {
-            margin-bottom: 0;
-        }
-
-        /* ---------- Highlight card ---------- */
-        .highlight-card {
-            background: linear-gradient(135deg, #2c70a7 0%, #173b70 100%);
-            border-radius: 20px;
-            padding: 1.7rem 1.8rem;
-            margin: 0.5rem 0 1.4rem 0;
-            box-shadow: 0 12px 32px rgba(26, 67, 105, 0.18);
-        }
-
-        .highlight-card h3,
-        .highlight-card p,
-        .highlight-card li {
-            color: white;
-        }
-
-        .highlight-card h3 {
-            font-size: 1.25rem;
-            margin: 0 0 0.75rem 0;
-        }
-
-        .highlight-card p,
-        .highlight-card li {
-            font-size: 0.96rem;
-            line-height: 1.65;
-        }
-
-        /* ---------- Streamlit markdown cleanup ---------- */
-        div[data-testid="stMarkdownContainer"] p {
-            margin-bottom: 0.35rem;
-        }
-
-        /* Hide Streamlit's default decorative divider */
-        hr {
-            display: none;
-        }
-
-        /* Buttons/links use the same blue family */
-        a {
-            color: #286899 !important;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-st.markdown(
-    '<div class="aetion-brand"><i>Aeti</i><span>ON</span></div>',
-    unsafe_allow_html=True,
+st.set_page_config(
+    page_title="About & Limitations",
+    page_icon="ℹ️",
+    layout="wide"
 )
 
+
+# ============================================================
+# AETION COLOUR THEME
+# ============================================================
+
 st.markdown(
-    """
-    <div class="hero">
-        <h1>About the Data &amp; Model</h1>
-        <p>Understand what the model can tell you — and where its limits are.</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
+"""<style>
+
+/* ============================================================
+   MAIN APPLICATION
+   ============================================================ */
+
+.stApp {
+    background-color: #DBE8F4;
+    color: #000000;
+}
+
+
+/* ============================================================
+   MAIN CONTENT WIDTH
+   ============================================================ */
+
+.block-container {
+    max-width: 1180px;
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+}
+
+
+/* ============================================================
+   MAIN TEXT
+   ============================================================ */
+
+.stApp p,
+.stApp li,
+.stApp label,
+.stApp span {
+    color: #000000;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: #000000 !important;
+}
+
+
+/* Captions */
+
+[data-testid="stCaptionContainer"] {
+    color: #5B6B7F !important;
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+[data-testid="stSidebar"] {
+    background-color: #263D73 !important;
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    background-color: #263D73 !important;
+}
+
+
+/* Sidebar text */
+
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] div,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] h4 {
+    color: #FFFFFF !important;
+}
+
+
+/* Sidebar navigation */
+
+[data-testid="stSidebarNav"] a,
+[data-testid="stSidebarNav"] a span {
+    color: #FFFFFF !important;
+}
+
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.about-hero {
+    background: linear-gradient(
+        110deg,
+        #202F57 0%,
+        #2E73B8 100%
+    );
+
+    border-radius: 20px;
+
+    padding: 30px 34px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 8px 22px rgba(32, 47, 87, 0.18);
+}
+
+.about-hero h1 {
+    color: #FFFFFF !important;
+
+    font-size: 38px;
+
+    font-weight: 700;
+
+    margin: 0 0 8px 0;
+}
+
+.about-hero p {
+    color: #FFFFFF !important;
+
+    font-size: 16px;
+
+    margin: 0;
+
+    opacity: 0.92;
+}
+
+
+/* ============================================================
+   AETION BRAND
+   ============================================================ */
+
+.aetion-brand {
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 1.7rem;
+
+    font-weight: 700;
+
+    letter-spacing: -0.04em;
+
+    color: #17243A;
+
+    margin-bottom: 1.5rem;
+}
+
+.aetion-brand span {
+    color: #2E73B8;
+}
+
+
+/* ============================================================
+   INFORMATION CARDS
+   ============================================================ */
+
+.info-card {
+    background-color: #FFFFFF;
+
+    border-radius: 16px;
+
+    border-left: 5px solid #2E73B8;
+
+    padding: 22px 24px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 6px 18px rgba(32, 47, 87, 0.10);
+}
+
+.info-card h3 {
+    color: #000000 !important;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+    margin: 0 0 12px 0;
+}
+
+.info-card p {
+    color: #000000 !important;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+
+    margin: 0 0 10px 0;
+}
+
+.info-card ul {
+    margin: 0;
+
+    padding-left: 22px;
+}
+
+.info-card li {
+    color: #000000 !important;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+
+    margin-bottom: 10px;
+}
+
+.info-card li:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   HIGHLIGHT CARD
+   ============================================================ */
+
+.highlight-card {
+    background: linear-gradient(
+        135deg,
+        #2E73B8 0%,
+        #202F57 100%
+    );
+
+    border-radius: 18px;
+
+    padding: 24px 26px;
+
+    margin: 18px 0 22px 0;
+
+    box-shadow:
+        0 10px 28px rgba(32, 47, 87, 0.16);
+}
+
+.highlight-card h3 {
+    color: #FFFFFF !important;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+    margin: 0 0 10px 0;
+}
+
+.highlight-card p,
+.highlight-card li {
+    color: #FFFFFF !important;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+}
+
+.highlight-card ul {
+    margin: 0;
+
+    padding-left: 22px;
+}
+
+.highlight-card li {
+    margin-bottom: 9px;
+}
+
+
+/* ============================================================
+   STREAMLIT MARKDOWN
+   ============================================================ */
+
+[data-testid="stMarkdownContainer"] p {
+    margin-bottom: 0.5rem;
+}
+
+
+/* ============================================================
+   DIVIDERS
+   ============================================================ */
+
+hr {
+    border-color: #C9DDEC !important;
+}
+
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+
+a {
+    color: #2E73B8 !important;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    .block-container {
+        padding-top: 1.5rem;
+    }
+
+    .about-hero {
+        padding: 24px;
+    }
+
+    .about-hero h1 {
+        font-size: 30px;
+    }
+
+    .info-card {
+        padding: 18px;
+    }
+
+}
+
+</style>""",
+unsafe_allow_html=True
 )
+
+
+# ============================================================
+# AETION BRAND
+# ============================================================
+
+st.markdown(
+"""<div class="aetion-brand"><i>Aeti</i><span>ON</span></div>""",
+unsafe_allow_html=True
+)
+
+
+# ============================================================
+# HERO
+# ============================================================
+
+st.markdown(
+"""<div class="about-hero">
+<h1>About the Data &amp; Model</h1>
+<p>Understand what the model can tell you — and where its limits are.</p>
+</div>""",
+unsafe_allow_html=True
+)
+
+
 st.caption(
-    "Read this before trusting any number elsewhere in this app. This page "
-    "exists so nothing here is oversold."
+    "Read this before trusting any number elsewhere in this app. "
+    "This page exists so nothing here is oversold."
 )
 
-st.divider()
-st.subheader("Where the data comes from")
-st.markdown(
-    "- Source: the UCI **\"Predict Students' Dropout and Academic Success\"** "
-    "dataset — roughly 4,400 students, all from **one institution in "
-    "Portugal**. Results here may not generalize to other institutions, "
-    "countries, or student populations.\n"
-    "- This is **observational data**, not a randomized experiment. Nobody "
-    "was randomly assigned to, say, be a scholarship holder — students "
-    "self-selected or qualified into these situations for reasons the "
-    "dataset doesn't fully capture.\n"
-    "- The outcome (**Target**) is a **single end-of-program snapshot** — "
-    "Dropout, Enrolled, or Graduate — recorded once, not a real-time feed "
-    "tracking students during the semester. This app cannot tell you "
-    "*when* during a term a student's risk changed."
-)
+
+# ============================================================
+# WHERE THE DATA COMES FROM
+# ============================================================
 
 st.divider()
-st.subheader("What the model's outputs do — and don't — mean")
+
+st.subheader("Where the Data Comes From")
+
 st.markdown(
-    "- **Predicted risk** (Dashboard, Student Explorer) is exactly that — a "
-    "prediction from a trained statistical model. It is not a diagnosis "
-    "and not a guarantee.\n"
-    "- **Risk tiers** (Low / Medium / High) are **model-based, illustrative "
-    "thresholds** — tertiles of this test set's predicted probabilities. "
-    "They are **not official, clinically validated, or institutionally "
-    "approved** risk categories.\n"
-    "- **SHAP explanations** (Student Explorer) describe why the *model* "
-    "produced a given prediction for a given student. They are **not** a "
-    "causal claim about what would happen if something about that student "
-    "changed.\n"
-    "- **Causal-adjustment associations** (Causal Insights) are **not proof "
-    "of causation**. They assume the confounder set used in the regression "
-    "captures the major differences between students — if an important "
-    "confounder was left unmeasured, the adjusted association could still "
-    "be biased. Treat these as suggestive associations, not effect sizes "
-    "you can act on with certainty.\n"
-    "- **Intervention suggestions** (Student Explorer) are phrased as "
-    "*\"suggested based on this student's risk-associated factors\"* — "
-    "never as a promise that acting on them will reduce a specific "
-    "student's risk by any amount."
+"""
+<div class="info-card">
+<ul>
+<li>
+<b>Source:</b> the UCI <b>"Predict Students' Dropout and Academic Success"</b>
+dataset — roughly 4,400 students, all from <b>one institution in Portugal</b>.
+Results here may not generalize to other institutions, countries, or student
+populations.
+</li>
+
+<li>
+This is <b>observational data</b>, not a randomized experiment. Nobody was
+randomly assigned to, say, be a scholarship holder — students self-selected
+or qualified into these situations for reasons the dataset doesn't fully
+capture.
+</li>
+
+<li>
+The outcome (<b>Target</b>) is a <b>single end-of-program snapshot</b> —
+Dropout, Enrolled, or Graduate — recorded once, not a real-time feed tracking
+students during the semester. This app cannot tell you <i>when</i> during a
+term a student's risk changed.
+</li>
+</ul>
+</div>
+""",
+unsafe_allow_html=True
 )
 
-st.divider()
-st.subheader("Fairness & privacy")
-st.markdown(
-    "- Demographic and fixed variables (gender, nationality, marital "
-    "status, parents' occupation, etc.) may help the model predict more "
-    "accurately, but they **never appear as the stated reason** for an "
-    "intervention suggestion — only the 3 actionable variables (tuition "
-    "status, scholarship status, debtor status) can trigger a "
-    "suggestion.\n"
-    "- This prototype has **no authentication or access control** — "
-    "acceptable here because the underlying dataset is already public and "
-    "anonymized. A real deployment handling actual student records would "
-    "need **FERPA-compliant access controls** and **role-restricted "
-    "advisor logins**."
-)
+
+# ============================================================
+# MODEL OUTPUTS
+# ============================================================
 
 st.divider()
-st.subheader("What this tool is (and isn't)")
+
+st.subheader("What the Model's Outputs Do — and Don't — Mean")
+
 st.markdown(
-    "This is a **decision-support prototype** to help an advisor prioritize "
-    "outreach — not a production system, not a diagnostic tool, and not a "
-    "substitute for an advisor's judgment. It has no database beyond a "
-    "static CSV, no login, no multi-institution support, and doesn't write "
-    "back to any system of record."
+"""
+<div class="info-card">
+<ul>
+
+<li>
+<b>Predicted risk</b> (Dashboard, Student Explorer) is exactly that —
+a prediction from a trained statistical model. It is not a diagnosis
+and not a guarantee.
+</li>
+
+<li>
+<b>Risk tiers</b> (Low / Medium / High) are <b>model-based, illustrative
+thresholds</b> — tertiles of this test set's predicted probabilities.
+They are <b>not official, clinically validated, or institutionally approved</b>
+risk categories.
+</li>
+
+<li>
+<b>SHAP explanations</b> (Student Explorer) describe why the <i>model</i>
+produced a given prediction for a given student. They are <b>not</b> a causal
+claim about what would happen if something about that student changed.
+</li>
+
+<li>
+<b>Causal-adjustment associations</b> (Causal Insights) are <b>not proof
+of causation</b>. They assume the confounder set used in the regression
+captures the major differences between students — if an important confounder
+was left unmeasured, the adjusted association could still be biased.
+Treat these as suggestive associations, not effect sizes you can act on
+with certainty.
+</li>
+
+<li>
+<b>Intervention suggestions</b> (Student Explorer) are phrased as
+<i>"suggested based on this student's risk-associated factors"</i> —
+never as a promise that acting on them will reduce a specific student's
+risk by any amount.
+</li>
+
+</ul>
+</div>
+""",
+unsafe_allow_html=True
+)
+
+
+# ============================================================
+# FAIRNESS & PRIVACY
+# ============================================================
+
+st.divider()
+
+st.subheader("Fairness & Privacy")
+
+st.markdown(
+"""
+<div class="info-card">
+<ul>
+
+<li>
+Demographic and fixed variables (gender, nationality, marital status,
+parents' occupation, etc.) may help the model predict more accurately,
+but they <b>never appear as the stated reason</b> for an intervention
+suggestion — only the 3 actionable variables (tuition status, scholarship
+status, debtor status) can trigger a suggestion.
+</li>
+
+<li>
+This prototype has <b>no authentication or access control</b> — acceptable
+here because the underlying dataset is already public and anonymized.
+A real deployment handling actual student records would need
+<b>FERPA-compliant access controls</b> and <b>role-restricted advisor
+logins</b>.
+</li>
+
+</ul>
+</div>
+""",
+unsafe_allow_html=True
+)
+
+
+# ============================================================
+# WHAT THIS TOOL IS
+# ============================================================
+
+st.divider()
+
+st.subheader("What This Tool Is — and Isn't")
+
+st.markdown(
+"""
+<div class="highlight-card">
+<h3>Decision-Support Prototype</h3>
+
+<p>
+This is a <b>decision-support prototype</b> to help an advisor prioritize
+outreach — not a production system, not a diagnostic tool, and not a
+substitute for an advisor's judgment.
+</p>
+
+<ul>
+<li>It has no database beyond a static CSV.</li>
+<li>It has no login within the Streamlit prototype.</li>
+<li>It does not currently provide multi-institution support.</li>
+<li>It does not write back to any system of record.</li>
+</ul>
+
+</div>
+""",
+unsafe_allow_html=True
+)
+
+
+# ============================================================
+# FINAL DISCLAIMER
+# ============================================================
+
+st.info(
+    "AETION is intended to support advisor decision-making, not replace it. "
+    "Predictions and explanations should always be interpreted alongside "
+    "real-world context and appropriate institutional processes."
 )
