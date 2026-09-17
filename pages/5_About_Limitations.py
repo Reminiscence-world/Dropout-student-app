@@ -33,10 +33,17 @@ st.markdown(
    ============================================================ */
 
 .stApp {
-    background-color: #DBE8F4;
+    background-color: #DBE8F4 !important;
     color: #000000;
 }
 
+.main {
+    background-color: #DBE8F4 !important;
+}
+
+[data-testid="stAppViewContainer"] {
+    background-color: #DBE8F4 !important;
+}
 
 /* ============================================================
    MAIN CONTENT WIDTH
