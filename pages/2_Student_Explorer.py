@@ -171,7 +171,7 @@ fig = px.bar(
 fig.update_layout(
     paper_bgcolor="#FFFFFF",
     plot_bgcolor="#F8FBFF",
-    margin=dict(l=20, r=20, t=60, b=20)
+    margin=dict(l=20, r=20, t=60, b=20),
     
     font=dict(
         color="black",
