@@ -9,6 +9,7 @@ opener: the problem statement, plus a way into the rest of the app.
 """
 
 import streamlit as st
+from utils import add_sidebar_logo
 from src.theme import APP_TITLE, APP_ICON, PAGE_ICONS
 
 
@@ -21,7 +22,7 @@ st.set_page_config(
     page_icon=PAGE_ICONS["home"],
     layout="wide"
 )
-
+add_sidebar_logo()
 
 # ============================================================
 # AETION COLOUR THEME
