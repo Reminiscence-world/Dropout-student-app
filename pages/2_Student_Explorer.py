@@ -11,6 +11,7 @@ out-of-sample predictions.
 """
 
 import streamlit as st
+from utils import add_sidebar_logo
 import pandas as pd
 import plotly.express as px
 
