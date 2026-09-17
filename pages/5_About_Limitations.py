@@ -10,7 +10,162 @@ import streamlit as st
 
 st.set_page_config(page_title="About & Limitations", layout="wide")
 
-st.title("About the Data & Model")
+st.markdown(
+    """
+    <style>
+        /* ---------- App background ---------- */
+        .stApp {
+            background:
+                radial-gradient(circle at 1px 1px,
+                    rgba(43, 105, 160, 0.12) 1px,
+                    transparent 1px) 0 0 / 28px 28px,
+                linear-gradient(180deg, #edf6fc 0%, #f7fbfe 100%);
+            color: #172b4d;
+        }
+
+        /* ---------- White top header ---------- */
+        header[data-testid="stHeader"] {
+            background: rgba(255, 255, 255, 0.97);
+            border-bottom: 1px solid #dce7f1;
+        }
+
+        /* ---------- Main content ---------- */
+        .block-container {
+            max-width: 1180px;
+            padding-top: 3rem;
+            padding-bottom: 4rem;
+        }
+
+        /* ---------- AETiON brand ---------- */
+        .aetion-brand {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: #17365d;
+            margin-bottom: 2.2rem;
+        }
+
+        .aetion-brand span {
+            color: #2f6fa3;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            text-align: center;
+            margin: 0 auto 2.5rem auto;
+        }
+
+        .hero h1 {
+            color: #142b4b;
+            font-size: 2.6rem;
+            line-height: 1.15;
+            font-weight: 750;
+            letter-spacing: -0.035em;
+            margin: 0 0 0.65rem 0;
+        }
+
+        .hero p {
+            color: #63758a;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        /* ---------- Section cards ---------- */
+        .info-card {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid #dbe8f2;
+            border-radius: 18px;
+            padding: 1.45rem 1.6rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 8px 28px rgba(35, 76, 112, 0.07);
+        }
+
+        .info-card h3 {
+            color: #183b63;
+            font-size: 1.2rem;
+            font-weight: 750;
+            margin: 0 0 0.9rem 0;
+        }
+
+        .info-card p,
+        .info-card li {
+            color: #52677d;
+            font-size: 0.96rem;
+            line-height: 1.65;
+        }
+
+        .info-card ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .info-card li {
+            margin-bottom: 0.65rem;
+        }
+
+        .info-card li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ---------- Highlight card ---------- */
+        .highlight-card {
+            background: linear-gradient(135deg, #2c70a7 0%, #173b70 100%);
+            border-radius: 20px;
+            padding: 1.7rem 1.8rem;
+            margin: 0.5rem 0 1.4rem 0;
+            box-shadow: 0 12px 32px rgba(26, 67, 105, 0.18);
+        }
+
+        .highlight-card h3,
+        .highlight-card p,
+        .highlight-card li {
+            color: white;
+        }
+
+        .highlight-card h3 {
+            font-size: 1.25rem;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .highlight-card p,
+        .highlight-card li {
+            font-size: 0.96rem;
+            line-height: 1.65;
+        }
+
+        /* ---------- Streamlit markdown cleanup ---------- */
+        div[data-testid="stMarkdownContainer"] p {
+            margin-bottom: 0.35rem;
+        }
+
+        /* Hide Streamlit's default decorative divider */
+        hr {
+            display: none;
+        }
+
+        /* Buttons/links use the same blue family */
+        a {
+            color: #286899 !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="aetion-brand"><i>Aeti</i><span>ON</span></div>',
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    """
+    <div class="hero">
+        <h1>About the Data &amp; Model</h1>
+        <p>Understand what the model can tell you — and where its limits are.</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 st.caption(
     "Read this before trusting any number elsewhere in this app. This page "
     "exists so nothing here is oversold."
