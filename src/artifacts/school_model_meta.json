@@ -1,6 +1,6 @@
 {
   "model_version": "school_dropout_v1",
-  "trained_at": "2026-09-17T16:37:46.116581+00:00",
+  "trained_at": "2026-09-17T17:47:49.992728+00:00",
   "positive_class": "Dropout",
   "positive_class_index": 0,
   "feature_order": [
