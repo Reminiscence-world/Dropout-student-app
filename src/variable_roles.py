@@ -74,3 +74,4 @@ def resolve_columns(df: pd.DataFrame, wanted: list) -> list:
     callers should surface `confounders_used` / similar back to the UI.
     """
     return [c for c in wanted if c in df.columns]
+#this is edited
