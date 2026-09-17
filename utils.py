@@ -1,6 +1,3 @@
-import streamlit as st
-
-
 def add_sidebar_logo():
     st.markdown(
         """
@@ -13,15 +10,14 @@ def add_sidebar_logo():
             margin-top: -10px;
             margin-bottom: 25px;
             padding-left: 5px;
-            color: #FFFFFF;
         }
 
         .aetion-sidebar-logo .aeti {
-            color: #FFFFFF;
+            color: #B8860B;
         }
 
         .aetion-sidebar-logo .on {
-            color: #5EA4F3;
+            color: #202F57;
         }
         </style>
 
