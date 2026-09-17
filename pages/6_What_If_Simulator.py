@@ -12,7 +12,7 @@ student's dropout risk.
 """
 
 import streamlit as st
-
+from utils import add_sidebar_logo
 from src.data_loader import load_and_clean_data
 from src.model import train_model
 from src.risk_tiers import assign_risk_tiers, TIER_CAVEAT
@@ -25,6 +25,7 @@ st.set_page_config(
     page_icon=PAGE_ICONS["what_if"],
     layout="wide",
 )
+add_sidebar_logo()
 
 DISCLAIMER = (
     "**Hypothetical simulation using the predictive model.** Does not prove "
