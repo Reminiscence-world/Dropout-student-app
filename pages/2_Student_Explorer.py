@@ -20,7 +20,20 @@ from src.explain import build_explainer, get_shap_values_for_test_set, explain_s
 from src.risk_tiers import assign_risk_tiers, TIER_CAVEAT
 from src.interventions import suggest_interventions
 
-st.set_page_config(page_title="Student Explorer", layout="wide")
+st.markdown("""
+<div style="
+padding:25px;
+background:linear-gradient(135deg,#1E2A4A,#2E73B8);
+border-radius:20px;
+margin-bottom:20px;
+">
+<h1 style="color:white;">🎓 Student Explorer</h1>
+<p style="color:white;">
+Drill into one student from the demo cohort:
+their predicted risk, explanation and intervention suggestions.
+</p>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
