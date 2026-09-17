@@ -20,7 +20,7 @@ from src.model import train_model
 from src.explain import build_explainer, get_shap_values_for_test_set, explain_student, explanation_to_text
 from src.risk_tiers import assign_risk_tiers, TIER_CAVEAT
 from src.interventions import suggest_interventions
-
+add_sidebar_logo()
 with open("style.css") as f:
     st.markdown(
         f"<style>{f.read()}</style>",
