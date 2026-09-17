@@ -108,7 +108,7 @@ fig = px.bar(
     y="feature",
     orientation="h",
     color="direction",
-    color_discrete_map={"increases risk": "#2E73B8","decreases risk": "#5EA4F3"}
+    color_discrete_map={"increases risk": "#2E73B8","decreases risk": "#5EA4F3"},
     title="Top contributing factors (SHAP)",
     labels={"shap_value": "SHAP value (positive = pushes toward Dropout)"},
 )
