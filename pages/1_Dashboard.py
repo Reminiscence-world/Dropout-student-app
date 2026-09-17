@@ -1,3 +1,4 @@
+
 """
 Ticket 9: pages/1_Dashboard.py — cohort-level overview.
 
@@ -18,9 +19,41 @@ from src.data_loader import load_and_clean_data
 from src.model import train_model
 from src.risk_tiers import assign_risk_tiers, tier_counts, TIER_CAVEAT
 
+def load_css():
+    with open("style.css") as f:
+        st.markdown(
+            f"<style>{f.read()}</style>",
+            unsafe_allow_html=True
+        )
+
+load_css()
+
 st.set_page_config(page_title="Dashboard", layout="wide")
 
-st.title("Cohort Dashboard")
+st.sidebar.markdown("""
+# 🎓 Reminiscence
+
+### Student Success Analytics
+
+Predict.
+Understand.
+Prevent Dropout.
+""")
+
+st.markdown("""
+<div style='padding:20px;background:linear-gradient(135deg,#0F3D2E,#8BC34A);
+border-radius:20px;color:white;margin-bottom:20px;'>
+
+<h1 style='color:white;'>📊 Cohort Dashboard</h1>
+
+<p>
+Predicted dropout risk across the demo cohort.
+Monitor students, identify risks early,
+and improve retention outcomes.
+</p>
+
+</div>
+""", unsafe_allow_html=True)
 st.caption(
     "Predicted dropout risk across the demo cohort (this app's held-out "
     "test set). See 'About & Limitations' for why there's no live roster "
@@ -50,6 +83,17 @@ c4.metric("Actual dropout rate", f"{actual_dropout_rate:.0%}")
 
 st.divider()
 
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.info("🎯 AI-Powered Risk Detection")
+
+with col2:
+    st.success("📈 Retention Analytics")
+
+with col3:
+    st.warning("⚡ Early Intervention Insights")
+
 col1, col2 = st.columns(2)
 
 with col1:
@@ -68,13 +112,17 @@ with col2:
         .sort_values("predicted_proba", ascending=False)
     )
     by_course["course"] = by_course["course"].astype(str)
-    fig_course = px.bar(
-        by_course,
-        x="course",
-        y="predicted_proba",
-        title="Average predicted P(Dropout) by course code",
-        labels={"predicted_proba": "Avg. predicted P(Dropout)", "course": "Course code"},
-    )
+    fig_tiers = px.bar(
+    counts_df,
+    x="tier",
+    y="count",
+    color="tier",
+    color_discrete_sequence=[
+        "#8BC34A",
+        "#4CAF50",
+        "#0F3D2E"
+    ]
+)
     st.plotly_chart(fig_course, use_container_width=True)
 
 
