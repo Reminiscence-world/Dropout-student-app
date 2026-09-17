@@ -50,6 +50,74 @@ st.caption(
     "PREDICTIVE model's output would change. This does not re-run the "
     "causal-adjustment module and is not a causal claim."
 )
+
+# --- AETION-inspired visual theme ---
+st.markdown("""
+<style>
+    /* Main page background */
+    .stApp {
+        background-color: #EAF4FB;
+        color: #17243A;
+    }
+
+    /* Main content text */
+    .stApp, .stApp p, .stApp label, .stApp span, .stApp div {
+        color: #17243A;
+    }
+
+    /* Headings */
+    h1, h2, h3, h4 {
+        color: #17243A !important;
+    }
+
+    /* Secondary/caption text */
+    .stCaption, [data-testid="stCaptionContainer"] {
+        color: #5B6B7F !important;
+    }
+
+    /* Blue accent for interactive elements */
+    [data-baseweb="select"] > div,
+    .stSelectbox > div > div {
+        border-color: #2E73B8 !important;
+    }
+
+    /* Buttons / primary accents */
+    .stButton > button {
+        background-color: #2E73B8;
+        color: #FFFFFF !important;
+        border: 1px solid #2E73B8;
+    }
+
+    .stButton > button:hover {
+        background-color: #245F98;
+        border-color: #245F98;
+    }
+
+    /* Dividers */
+    hr {
+        border-color: #C9DDEC !important;
+    }
+
+    /* Metric values */
+    [data-testid="stMetricValue"] {
+        color: #17243A !important;
+    }
+
+    /* Radio/slider accents */
+    [data-baseweb="radio"] [aria-checked="true"] {
+        background-color: #2E73B8 !important;
+        border-color: #2E73B8 !important;
+    }
+
+    /* Warning boxes: keep them compatible with the light blue theme */
+    [data-testid="stAlert"] {
+        background-color: #F3F8FC;
+        border-color: #5EA4F3;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 st.warning(DISCLAIMER)
 
 df = load_and_clean_data()
