@@ -23,6 +23,62 @@ from src.interventions import suggest_interventions
 st.set_page_config(page_title="Student Explorer", layout="wide")
 
 st.markdown("""
+<style>
+
+/* Main app background */
+.stApp {
+    background-color: #F4F8FC;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background-color: #FFFFFF;
+    border-right: 1px solid #DCE6F2;
+}
+
+/* Headers */
+h1, h2, h3 {
+    color: #1E2A4A !important;
+}
+
+/* Normal text */
+p, label, div {
+    color: #1E2A4A;
+}
+
+/* Selectboxes */
+.stSelectbox > div > div {
+    background-color: white;
+    color: #1E2A4A;
+    border-radius: 10px;
+}
+
+/* Metric cards */
+[data-testid="metric-container"] {
+    background-color: white;
+    border: 1px solid #DCE6F2;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Divider */
+hr {
+    border-color: #DCE6F2;
+}
+
+/* Plotly chart container */
+[data-testid="stPlotlyChart"] {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
 <div style="
 padding:25px;
 background:linear-gradient(135deg,#1E2A4A,#2E73B8);
@@ -113,9 +169,10 @@ fig = px.bar(
     labels={"shap_value": "SHAP value (positive = pushes toward Dropout)"},
 )
 fig.update_layout(
-    paper_bgcolor="white",
-    plot_bgcolor="white",
-
+    paper_bgcolor="#FFFFFF",
+    plot_bgcolor="#F8FBFF",
+    margin=dict(l=20, r=20, t=60, b=20)
+    
     font=dict(
         color="black",
         size=14
