@@ -31,12 +31,17 @@ load_css()
 st.set_page_config(page_title="Dashboard", layout="wide")
 
 st.markdown("""
-<div style='padding:20px;background:linear-gradient(135deg,#0F3D2E,#8BC34A);
-border-radius:20px;color:white;margin-bottom:20px;'>
+<div style='
+padding:30px;
+background:linear-gradient(135deg,#1E2A4A,#2E73B8);
+border-radius:20px;
+color:white;
+margin-bottom:20px;
+'>
 
 <h1 style='color:white;'>📊 Cohort Dashboard</h1>
 
-<p>
+<p style='color:white;'>
 Predicted dropout risk across the demo cohort.
 Monitor students, identify risks early,
 and improve retention outcomes.
@@ -44,6 +49,7 @@ and improve retention outcomes.
 
 </div>
 """, unsafe_allow_html=True)
+
 st.caption(
     "Predicted dropout risk across the demo cohort (this app's held-out "
     "test set). See 'About & Limitations' for why there's no live roster "
@@ -97,9 +103,9 @@ with col1:
         y="count",
         color="tier",
         color_discrete_sequence=[
-            "#8BC34A",
-            "#4CAF50",
-            "#0F3D2E"
+            "#5EA4F3",
+            "#2E73B8",
+            "#1E2A4A"
         ]
     )
 
