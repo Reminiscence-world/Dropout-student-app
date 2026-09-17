@@ -1,7 +1,18 @@
 import json
 from pathlib import Path
-
 import streamlit as st
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import render_school_hero
+
+render_school_hero(
+    title="ℹ️ About & Limitations",
+    subtitle="Methodology notes, algorithmic boundaries, and ethical safeguards.",
+    description="Interventions are transparent heuristic routing rules rather than causal guarantees. Demographic attributes are never used to justify interventions."
+)
+
+# Limitations text continues below...
 
 
 META_PATH = Path("src/artifacts/school_model_meta.json")

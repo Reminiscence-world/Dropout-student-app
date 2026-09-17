@@ -1,10 +1,14 @@
 import streamlit as st
-
+from utils import apply_school_theme
 
 st.set_page_config(
     page_title="School Dashboard",
     page_icon="🏫",
+    layout="wide",
 )
+
+# Injects global blue theme + AETION sidebar logo across all pages
+apply_school_theme()
 
 pages = [
     st.Page(
@@ -30,5 +34,4 @@ pages = [
 ]
 
 pg = st.navigation(pages)
-
 pg.run()

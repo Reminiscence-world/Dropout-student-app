@@ -1,4 +1,4 @@
-import streamlit as st
+'''import streamlit as st
 
 from src.inference import predict_school
 
@@ -123,4 +123,4 @@ if st.button("Predict Dropout Risk"):
 
         for intervention in result["interventions"]:
             st.write(f"**{intervention['title']}**")
-            st.write(intervention["rationale"])
+            st.write(intervention["rationale"])'''

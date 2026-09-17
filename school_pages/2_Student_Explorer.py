@@ -1,4 +1,17 @@
 import streamlit as st
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import render_school_hero
+
+render_school_hero(
+    title="👨‍🎓 Student Explorer",
+    subtitle="Inspect individual student profiles and model-driven routing recommendations.",
+    description="Select or enter student attributes to view predicted dropout risk tiers, key contributory factors, and targeted intervention strategies."
+)
+
+# Student explorer form/tables continue below...
 import pandas as pd
 
 from src.school_pipeline import load_school_data, clean_school_data

@@ -1,4 +1,19 @@
 import streamlit as st
+import sys
+from pathlib import Path
+
+# Add root folder so utils can be imported
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import render_school_hero
+
+render_school_hero(
+    title="🏫 School Dropout Risk Dashboard",
+    subtitle="Cohort-level overview of the school student dataset.",
+    description="This tool provides early decision support to identify at-risk K-12 students, highlighting critical infrastructure, academic, and socio-economic indicators across schools.",
+    scope_badge="Built on the SIH K-12 Dropout Dataset (~10,198 students). See About & Limitations for details."
+)
+
+# Rest of your existing cohort charts & metrics continue below...
 import pandas as pd
 
 from src.school_pipeline import load_school_data, clean_school_data

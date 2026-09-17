@@ -1,8 +1,18 @@
 import json
 from pathlib import Path
-
+import sys
 import streamlit as st
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils import render_school_hero
+
+render_school_hero(
+    title="📊 Model Evaluation",
+    subtitle="Performance metrics and validation for the School RandomForest model.",
+    description="Detailed evaluation including stratified cross-validation, confusion matrices, and recall-focused assessment on the dropout minority class."
+)
+
+# Model evaluation metrics/plots continue below...
 
 META_PATH = Path("src/artifacts/school_model_meta.json")
 
