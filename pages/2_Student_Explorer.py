@@ -91,26 +91,6 @@ hr {
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div style="
-padding:25px;
-background:linear-gradient(135deg,#1E2A4A,#2E73B8);
-border-radius:20px;
-margin-bottom:20px;
-">
-<h1 style="color:white;">🎓 Student Explorer</h1>
-<p style="color:white;">
-Drill into one student from the demo cohort:
-their predicted risk, explanation and intervention suggestions.
-</p>
-</div>
-""", unsafe_allow_html=True)
-
-st.caption(
-    "Drill into one student from the demo cohort: their predicted risk, "
-    "why the model flagged them, and any suggested intervention."
-)
-
 df = load_and_clean_data()
 results = train_model(df)
 tiers, cutoffs = assign_risk_tiers(results["y_pred_proba"])
