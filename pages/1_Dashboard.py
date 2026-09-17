@@ -40,8 +40,8 @@ margin-bottom:20px;
 '>
 
 <h1 style='color:white;'>📊 Cohort Dashboard</h1>
-
 <p style='color:white;'>
+
 Predicted dropout risk across the demo cohort.
 Monitor students, identify risks early,
 and improve retention outcomes.
