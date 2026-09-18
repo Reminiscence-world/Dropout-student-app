@@ -1,14 +1,15 @@
 """
-Ticket 10: pages/2_Student_Explorer.py — drill into one student.
-
-Shows, for a single selected student: their predicted risk tier and
-probability, their top SHAP-explained factors (chart + plain text), and
-any intervention suggestion the rule table (Ticket 8) fires for them.
-
-Same cohort convention as the Dashboard (Ticket 9): students shown here
-are from the held-out test set, since that's the only group with
-out-of-sample predictions.
+pages/2_Student_Explorer.py — drill into one student.
+Supports inspecting either the held-out test cohort or an uploaded batch.
 """
+
+import sys
+from pathlib import Path
+
+# Add project root directory to Python path
+root_dir = Path(__file__).resolve().parent.parent
+if str(root_dir) not in sys.path:
+    sys.path.insert(0, str(root_dir))
 
 import streamlit as st
 from utils import add_sidebar_logo
@@ -17,34 +18,26 @@ import plotly.express as px
 
 from src.data_loader import load_and_clean_data
 from src.model import train_model
-from src.explain import build_explainer, get_shap_values_for_test_set, explain_student, explanation_to_text
+from src.explain import (
+    build_explainer,
+    get_shap_values_for_test_set,
+    explain_student,
+    explanation_to_text,
+)
 from src.risk_tiers import assign_risk_tiers, TIER_CAVEAT
 from src.interventions import suggest_interventions
+
 add_sidebar_logo()
-with open("style.css") as f:
-    st.markdown(
-        f"<style>{f.read()}</style>",
-        unsafe_allow_html=True
-    )
 
-st.markdown("""
-<div style="
-padding:25px;
-background:linear-gradient(135deg,#1E2A4A,#2E73B8);
-border-radius:20px;
-margin-bottom:20px;
-">
-<h1 style="color:white;">🎓 Student Explorer</h1>
-<p style="color:white;">
-Drill into one student from the demo cohort:
-their predicted risk, explanation and intervention suggestions.
-</p>
-</div>
-""", unsafe_allow_html=True)
+try:
+    with open("style.css") as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+except FileNotFoundError:
+    pass
 
-st.markdown("""
+st.markdown(
+    """
 <style>
-
 /* Main app background */
 .stApp {
     background-color: #DBE8F4;
@@ -58,8 +51,8 @@ st.markdown("""
         #243A73 100%
     );
 }
-/* Sidebar text */
 
+/* Sidebar text */
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span,
@@ -68,8 +61,8 @@ st.markdown("""
 [data-testid="stSidebar"] h3 {
     color: white !important;
 }
-/* Page names */
 
+/* Page names */
 [data-testid="stSidebarNav"] span {
     color: white !important;
 }
@@ -89,7 +82,7 @@ p, label, div {
     color: #1E2A4A;
 }
 
-/* Selectboxes */
+/* Selectboxes & Radio */
 .stSelectbox > div > div {
     background-color: white;
     color: #1E2A4A;
@@ -117,66 +110,145 @@ hr {
     padding: 10px;
     box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
 }
-
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
-df = load_and_clean_data()
-results = train_model(df)
-tiers, cutoffs = assign_risk_tiers(results["y_pred_proba"])
+st.markdown(
+    """
+<div style="
+padding:25px;
+background:linear-gradient(135deg,#1E2A4A,#2E73B8);
+border-radius:20px;
+margin-bottom:20px;
+">
+<h1 style="color:white;">🎓 Student Explorer</h1>
+<p style="color:white;">
+Drill into one student: inspect predicted risk, SHAP explanations, and intervention suggestions.
+</p>
+</div>
+""",
+    unsafe_allow_html=True,
+)
 
-explainer = build_explainer(results["model"], results["X_train"])
-shap_df = get_shap_values_for_test_set(results["model"], explainer, results["X_test"])
+# --- Cohort Toggle Switch ---
+has_upload = (
+    "uploaded_batch" in st.session_state
+    and st.session_state["uploaded_batch"] is not None
+)
 
-X_test = results["X_test"]
-student_ids = X_test.index.tolist()
+data_source = st.radio(
+    "Select Student Population to Inspect:",
+    options=(
+        ["Test-set cohort", "Uploaded batch"]
+        if has_upload
+        else ["Test-set cohort"]
+    ),
+    horizontal=True,
+    help=(
+        "Switch between the baseline validation cohort and newly uploaded CSV"
+        " students."
+        if has_upload
+        else "Upload a CSV on the Dashboard page to unlock the uploaded batch view."
+    ),
+)
 
-# --- Filter + select ---
-tier_filter = st.selectbox("Filter by risk tier", options=["All", "Low", "Medium", "High"])
+if not has_upload and data_source == "Test-set cohort":
+    st.caption(
+        "ℹ️ *Tip: You can upload a batch CSV on the Dashboard to explore custom"
+        " student profiles here.*"
+    )
+
+# --- Load Selected Population Data ---
+if data_source == "Uploaded batch" and has_upload:
+    batch = st.session_state["uploaded_batch"]
+    X_view = batch["features"]
+    scores = batch["scores"]
+    shap_df = batch["shap_df"]
+    student_ids = X_view.index.tolist()
+    tiers = scores["risk_tier"]
+    probas = scores["predicted_proba"]
+    actuals = None  # Uploaded data has no ground-truth label
+else:
+    df = load_and_clean_data()
+    results = train_model(df)
+    tiers, cutoffs = assign_risk_tiers(results["y_pred_proba"])
+    explainer = build_explainer(results["model"], results["X_train"])
+    shap_df = get_shap_values_for_test_set(
+        results["model"], explainer, results["X_test"]
+    )
+    X_view = results["X_test"]
+    student_ids = X_view.index.tolist()
+    probas = results["y_pred_proba"]
+    actuals = results["y_test"]
+
+# --- Filter + Select ---
+col_filter, col_select = st.columns([1, 2])
+
+with col_filter:
+    tier_filter = st.selectbox(
+        "Filter by risk tier", options=["All", "Low", "Medium", "High"]
+    )
 
 if tier_filter == "All":
     visible_ids = student_ids
 else:
-    mask = tiers.values == tier_filter
+    mask = [t == tier_filter for t in tiers]
     visible_ids = [sid for sid, keep in zip(student_ids, mask) if keep]
 
 if not visible_ids:
     st.warning("No students match that filter.")
     st.stop()
 
-selected_id = st.selectbox(
-    "Select a student (type to search by ID)",
-    options=visible_ids,
-    format_func=lambda x: f"Student ID {x}",
+with col_select:
+    selected_id = st.selectbox(
+        "Select student record",
+        options=visible_ids,
+        format_func=lambda x: f"Student ID / Row: {x}",
+    )
+
+position = X_view.index.get_loc(selected_id)
+
+# --- Headline Metrics for Selected Student ---
+tier_val = tiers.iloc[position] if hasattr(tiers, "iloc") else tiers[position]
+proba_val = (
+    probas.iloc[position] if hasattr(probas, "iloc") else probas[position]
 )
 
-position = X_test.index.get_loc(selected_id)
+if actuals is not None:
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Risk tier", tier_val)
+    c2.metric("Predicted P(Dropout)", f"{float(proba_val):.2f}")
+    act_val = (
+        actuals.iloc[position]
+        if hasattr(actuals, "iloc")
+        else actuals[position]
+    )
+    c3.metric(
+        "Actual outcome (Ground truth)",
+        "Dropout" if act_val == 1 else "Not Dropout",
+    )
+else:
+    c1, c2 = st.columns(2)
+    c1.metric("Risk tier", tier_val)
+    c2.metric("Predicted P(Dropout)", f"{float(proba_val):.2f}")
 
-# --- Headline for this student ---
-tier = tiers.iloc[position]
-proba = results["y_pred_proba"][position]
-actual = results["y_test"].iloc[position]
-
-c1, c2, c3 = st.columns(3)
-c1.metric("Risk tier", tier)
-c2.metric("Predicted P(Dropout)", f"{proba:.2f}")
-c3.metric("Actual outcome (this dataset)", "Dropout" if actual == 1 else "Not Dropout")
 st.caption(TIER_CAVEAT)
-
 st.divider()
 
-# --- SHAP explanation ---
+# --- SHAP Explanation ---
 st.subheader("Why the model flagged this student")
 st.caption(
-    "This is a property of the model's prediction, not a causal claim — "
-    "see the Causal Insights page for confounder-adjusted associations."
+    "This is a property of the model's prediction, not a causal claim — see the"
+    " Causal Insights page for confounder-adjusted associations."
 )
 
-# 1. Full explanation across all features for intervention checks
-full_explanation = explain_student(position, X_test, shap_df, top_n=len(X_test.columns))
+full_explanation = explain_student(
+    position, X_view, shap_df, top_n=len(X_view.columns)
+)
+top5_explanation = explain_student(position, X_view, shap_df, top_n=5)
 
-# 2. Top-5 explanation strictly for clean visual chart display
-top5_explanation = explain_student(position, X_test, shap_df, top_n=5)
 explanation_df = pd.DataFrame(top5_explanation)
 explanation_df["abs_shap"] = explanation_df["shap_value"].abs()
 explanation_df = explanation_df.sort_values("abs_shap")
@@ -187,7 +259,10 @@ fig = px.bar(
     y="feature",
     orientation="h",
     color="direction",
-    color_discrete_map={"increases risk": "#2E73B8","decreases risk": "#5EA4F3"},
+    color_discrete_map={
+        "increases risk": "#2E73B8",
+        "decreases risk": "#5EA4F3",
+    },
     title="Top contributing factors (SHAP)",
     labels={"shap_value": "SHAP value (positive = pushes toward Dropout)"},
 )
@@ -195,47 +270,38 @@ fig.update_layout(
     paper_bgcolor="#FFFFFF",
     plot_bgcolor="#F8FBFF",
     margin=dict(l=20, r=20, t=60, b=20),
-    
-    font=dict(
-        color="black",
-        size=14
-    ),
-
-    title_font=dict(
-        color="black",
-        size=18
-    ),
-
+    font=dict(color="black", size=14),
+    title_font=dict(color="black", size=18),
     xaxis=dict(
         tickfont=dict(color="black"),
         title_font=dict(color="black"),
-        gridcolor="#E6EEF8"
+        gridcolor="#E6EEF8",
     ),
-
     yaxis=dict(
         tickfont=dict(color="black"),
         title_font=dict(color="black"),
-        gridcolor="#E6EEF8"
+        gridcolor="#E6EEF8",
     ),
-
-    legend=dict(
-        font=dict(color="black")
-    )
+    legend=dict(font=dict(color="black")),
 )
 st.plotly_chart(fig, use_container_width=True)
 
 st.markdown(explanation_to_text(top5_explanation))
-
 st.divider()
 
-# --- Intervention suggestion ---
+# --- Intervention Suggestion ---
 st.subheader("Suggested intervention")
 
-student_row = X_test.iloc[position]
-suggestions = suggest_interventions(full_explanation, tier, student_row=student_row)
+student_row = X_view.iloc[position]
+suggestions = suggest_interventions(
+    full_explanation, tier_val, student_row=student_row
+)
 
 if suggestions:
     for s in suggestions:
         st.markdown(f"- {s}")
 else:
-    st.markdown("No actionable, risk-increasing factor among this student's top contributors.")
+    st.markdown(
+        "No actionable, risk-increasing factor among this student's top"
+        " contributors."
+    )
