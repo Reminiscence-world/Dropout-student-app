@@ -47,3 +47,30 @@ def tier_counts(tiers) -> pd.DataFrame:
     """Tier counts as a small DataFrame, ordered Low/Medium/High for charting."""
     counts = pd.Series(tiers).value_counts().reindex(TIER_LABELS).fillna(0).astype(int)
     return pd.DataFrame({"tier": TIER_LABELS, "count": counts.values})
+
+
+def classify_tier_single(proba: float, cutoffs: dict) -> str:
+    """
+    Classify ONE new predicted probability into Low/Medium/High using
+    PRE-COMPUTED cutoffs (e.g. from assign_risk_tiers on the real test
+    set) — used for a single new point (a What-If Simulator prediction)
+    rather than recomputing tertiles, which would be meaningless with
+    n=1.
+    """
+    if proba <= cutoffs["low_medium"]:
+        return "Low"
+    elif proba <= cutoffs["medium_high"]:
+        return "Medium"
+    return "High"
+
+
+def classify_tiers_batch(proba_array, cutoffs: dict):
+    """
+    Classify a batch of NEW predicted probabilities (e.g. an admin's
+    uploaded file) against the SAME frozen cutoffs from the real test
+    set, rather than computing fresh tertiles from the new batch —
+    a differently-sized or differently-shaped batch would otherwise
+    produce tiers that aren't comparable to the rest of the app.
+    Returns a numpy array of tier label strings, same length as input.
+    """
+    return pd.Series(proba_array).apply(lambda p: classify_tier_single(p, cutoffs)).values
