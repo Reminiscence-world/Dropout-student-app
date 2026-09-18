@@ -13,9 +13,10 @@ data (data_loader.standardize_columns) before anything else happens.
 """
 
 import io
+from pathlib import Path
 import pandas as pd
 
-from src.risk_tiers import classify_tiers_batch
+ROSTER_FILE = Path("data/incremental_roster.csv")
 
 
 def read_uploaded_csv(uploaded_file) -> pd.DataFrame:
@@ -56,10 +57,12 @@ def find_missing_values(df: pd.DataFrame, columns: list) -> pd.DataFrame:
     if not na_mask.values.any():
         return pd.DataFrame(columns=["row", "column"])
     rows, cols = na_mask.values.nonzero()
-    return pd.DataFrame({
-        "row": rows,
-        "column": [columns[c] for c in cols],
-    })
+    return pd.DataFrame(
+        {
+            "row": rows,
+            "column": [columns[c] for c in cols],
+        }
+    )
 
 
 def coerce_numeric(df: pd.DataFrame, columns: list):
@@ -77,60 +80,59 @@ def coerce_numeric(df: pd.DataFrame, columns: list):
         newly_bad = converted.isna() & original.notna()
         if newly_bad.any():
             for row in original.index[newly_bad]:
-                bad_cells.append({"row": row, "column": col, "value": original.loc[row]})
+                bad_cells.append(
+                    {"row": row, "column": col, "value": original.loc[row]}
+                )
         clean_df[col] = converted
     return clean_df, bad_cells
 
 
-def score_students(input_df: pd.DataFrame, model, feature_order: list, cutoffs: dict):
+def score_students(
+    input_df: pd.DataFrame, model, feature_order: list, cutoffs: dict
+):
     """
     Run the trained model on a validated, cleaned, numeric DataFrame.
-
-    input_df must already have exactly `feature_order`'s columns present
-    (drop any extras before calling this) and no missing/non-numeric
-    values.
-
-    Reindexes to `feature_order` explicitly before predicting — the
-    fitted scaler/classifier depend on column ORDER as well as names,
-    so this guards against a silently-misaligned prediction if the
-    upload's column order differs from the order used at training time.
-
-    Returns (scores_df, ordered_features):
-      scores_df       - DataFrame indexed like input_df with
-                         predicted_proba and risk_tier columns
-      ordered_features - input_df reindexed to feature_order (this is
-                         what SHAP/explain functions should be run on,
-                         so their column order matches what the model
-                         and explainer expect)
+    Self-contained tier bucketing so no external risk_tier function import is required.
     """
     ordered = input_df[feature_order]
     proba = model.predict_proba(ordered)[:, 1]
-    tiers = classify_tiers_batch(proba, cutoffs)
 
-    scores_df = pd.DataFrame({
-        "predicted_proba": proba,
-        "risk_tier": tiers,
-    }, index=input_df.index)
+    # Directly assign tertiles from cutoffs dict without importing classify_tiers_batch
+    low_cutoff = cutoffs["low_medium"]
+    med_cutoff = cutoffs["medium_high"]
+    tiers = [
+        "Low" if p <= low_cutoff else "Medium" if p <= med_cutoff else "High"
+        for p in proba
+    ]
+
+    scores_df = pd.DataFrame(
+        {
+            "predicted_proba": proba,
+            "risk_tier": tiers,
+        },
+        index=input_df.index,
+    )
 
     return scores_df, ordered
-from pathlib import Path
 
-ROSTER_FILE = Path("data/incremental_roster.csv")
 
-def append_to_cumulative_roster(ordered_features: pd.DataFrame, scores_df: pd.DataFrame) -> pd.DataFrame:
+def append_to_cumulative_roster(
+    ordered_features: pd.DataFrame, scores_df: pd.DataFrame
+) -> pd.DataFrame:
     """Combines features and scores, appends to CSV on disk, and returns full cumulative table."""
     ROSTER_FILE.parent.mkdir(parents=True, exist_ok=True)
-    
-    # Merge features with their computed predictions
+
     current_batch = ordered_features.copy()
     current_batch["predicted_proba"] = scores_df["predicted_proba"]
     current_batch["risk_tier"] = scores_df["risk_tier"]
-    
+
     if ROSTER_FILE.exists():
         existing_df = pd.read_csv(ROSTER_FILE)
-        combined = pd.concat([existing_df, current_batch], ignore_index=True).drop_duplicates()
+        combined = pd.concat(
+            [existing_df, current_batch], ignore_index=True
+        ).drop_duplicates()
     else:
         combined = current_batch
-        
+
     combined.to_csv(ROSTER_FILE, index=False)
     return combined
