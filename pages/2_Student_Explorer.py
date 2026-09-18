@@ -138,6 +138,38 @@ has_upload = (
     and st.session_state["uploaded_batch"] is not None
 )
 
+from pathlib import Path
+
+ROSTER_FILE = Path("data/incremental_roster.csv")
+
+# 1. Check if an active upload is in session_state
+has_upload = (
+    "uploaded_batch" in st.session_state
+    and st.session_state["uploaded_batch"] is not None
+)
+
+# 2. If not in session_state, check if we have saved data on disk
+if not has_upload and ROSTER_FILE.exists():
+    saved_df = pd.read_csv(ROSTER_FILE)
+    if not saved_df.empty:
+        # Separate features from stored targets
+        feature_cols = [
+            c
+            for c in saved_df.columns
+            if c not in ["predicted_proba", "risk_tier"]
+        ]
+        explainer = build_explainer(results["model"], results["X_train"])
+        shap_saved_df = get_shap_values_for_test_set(
+            results["model"], explainer, saved_df[feature_cols]
+        )
+
+        st.session_state["uploaded_batch"] = {
+            "features": saved_df[feature_cols],
+            "scores": saved_df[["predicted_proba", "risk_tier"]],
+            "shap_df": shap_saved_df,
+            "verdicts": saved_df,
+        }
+        has_upload = True
 data_source = st.radio(
     "Select Student Population to Inspect:",
     options=(
