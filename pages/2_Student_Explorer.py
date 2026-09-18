@@ -132,33 +132,26 @@ Drill into one student: inspect predicted risk, SHAP explanations, and intervent
     unsafe_allow_html=True,
 )
 
-# --- Cohort Toggle Switch ---
-has_upload = (
-    "uploaded_batch" in st.session_state
-    and st.session_state["uploaded_batch"] is not None
-)
+# --- Load Baseline Model & Data Upfront ---
+df = load_and_clean_data()
+results = train_model(df)
+tiers_default, cutoffs_default = assign_risk_tiers(results["y_pred_proba"])
+explainer = build_explainer(results["model"], results["X_train"])
 
-from pathlib import Path
-
+# --- Cohort Toggle & Disk Fallback ---
 ROSTER_FILE = Path("data/incremental_roster.csv")
 
-# 1. Check if an active upload is in session_state
 has_upload = (
     "uploaded_batch" in st.session_state
     and st.session_state["uploaded_batch"] is not None
 )
 
-# 2. If not in session_state, check if we have saved data on disk
 if not has_upload and ROSTER_FILE.exists():
     saved_df = pd.read_csv(ROSTER_FILE)
     if not saved_df.empty:
-        # Separate features from stored targets
         feature_cols = [
-            c
-            for c in saved_df.columns
-            if c not in ["predicted_proba", "risk_tier"]
+            c for c in saved_df.columns if c not in ["predicted_proba", "risk_tier"]
         ]
-        explainer = build_explainer(results["model"], results["X_train"])
         shap_saved_df = get_shap_values_for_test_set(
             results["model"], explainer, saved_df[feature_cols]
         )
@@ -170,6 +163,7 @@ if not has_upload and ROSTER_FILE.exists():
             "verdicts": saved_df,
         }
         has_upload = True
+
 data_source = st.radio(
     "Select Student Population to Inspect:",
     options=(
@@ -179,8 +173,7 @@ data_source = st.radio(
     ),
     horizontal=True,
     help=(
-        "Switch between the baseline validation cohort and newly uploaded CSV"
-        " students."
+        "Switch between the baseline validation cohort and newly uploaded CSV students."
         if has_upload
         else "Upload a CSV on the Dashboard page to unlock the uploaded batch view."
     ),
@@ -192,6 +185,25 @@ if not has_upload and data_source == "Test-set cohort":
         " student profiles here.*"
     )
 
+# --- Load Selected Population Data ---
+if data_source == "Uploaded batch" and has_upload:
+    batch = st.session_state["uploaded_batch"]
+    X_view = batch["features"]
+    scores = batch["scores"]
+    shap_df = batch["shap_df"]
+    student_ids = X_view.index.tolist()
+    tiers = scores["risk_tier"]
+    probas = scores["predicted_proba"]
+    actuals = None  # Uploaded data has no ground-truth label
+else:
+    shap_df = get_shap_values_for_test_set(
+        results["model"], explainer, results["X_test"]
+    )
+    X_view = results["X_test"]
+    student_ids = X_view.index.tolist()
+    tiers = tiers_default
+    probas = results["y_pred_proba"]
+    actuals = results["y_test"]
 # --- Load Selected Population Data ---
 if data_source == "Uploaded batch" and has_upload:
     batch = st.session_state["uploaded_batch"]
